@@ -9,14 +9,16 @@ profile:
   image: prof_pic.jpg
   image_circular: false
 
+
 news: true
 selected_papers: true
 social: true
 
+
 style: |
   .profile {
     float: left;
-    width: 200px !important;
+    width: 220px !important;    /* 可以根据喜好微调照片大小 */
     margin-top: 0 !important;
     margin-right: 30px !important;
   }
@@ -25,15 +27,17 @@ style: |
     overflow: hidden;
     margin-top: 0 !important;
     padding-top: 0 !important;
+    margin-bottom: 15px !important;
   }
   header h1 {
-    margin-top: 0 !important;
+    margin-top: 0 !important;   /* 让名字和照片顶部绝对平齐 */
   }
 ---
 
 I am currently a researcher at JD.com. I obtained my Ph.D. degree from the Chinese Academy of Sciences, Institute of Automation, supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
 
 My research focuses on Data-centric AI and AI Infrastructure, with a specific emphasis on data mixture optimization, data selection, and data synthesis to construct a self-evolving data flywheel, as well as efficient model training and inference. These techniques have been successfully deployed in production within JD Retail's commodity understanding, yielding substantial business impact.
+
 
 
 
