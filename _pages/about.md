@@ -2,16 +2,24 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc.
+subtitle: “Researcher, JD.com &nbsp;·&nbsp; Beijing, China &nbsp;·&nbsp; wjiaxing94@gmail.com”
 
 profile:
-  align: right
+  align: left
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
-  more_info: >
-    <p>555 your office number</p>
-    <p>123 your address street</p>
-    <p>Your City, State 12345</p>
+
+style: |
+  .profile {
+    width: 200px !important;   /* 👈 这里调整照片宽度，你可以改成 150px 或更小 */
+    margin-top: 5px !important; /* 👈 微调这个值，直到照片顶部和姓名完美平齐 */
+    margin-right: 30px !important;
+  }
+  .post-header {
+    margin-bottom: 20px;
+  }
+
+
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
