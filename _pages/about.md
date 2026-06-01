@@ -48,7 +48,7 @@ latest_posts:
     <p style="font-size: 1.1rem; margin-bottom: 15px;"><strong>Email:</strong> wjiaxing94 [at] gmail.com</p>
 
     <div class="contact-icons">
-      {% include social.liquid %}
+      {% include social.html %}
     </div>
   </div>
 </div>
