@@ -8,16 +8,6 @@ profile:
   image: prof_pic.jpg
   image_circular: false
 
-style: |
-  header.post-header {
-    display: none !important;
-  }
-  .profile {
-    width: 200px !important;
-    margin-top: 0px !important;
-    margin-right: 30px !important;
-  }
-
 selected_papers: true 
 social: true 
 
@@ -33,6 +23,16 @@ latest_posts:
   
 ---
 
+<style>
+  .post-header {
+    display: none !important;
+  }
+  .profile {
+    width: 200px !important;
+    margin-top: 0px !important;
+    margin-right: 30px !important;
+  }
+</style>
 
 <h1 style="margin-top: 0; font-size: 2.5rem;"><span style="font-weight: bold;">Jiaxing</span> Wang （王家兴）</h1>
 <p style="font-size: 1.1rem; margin-bottom: 20px;">Researcher, JD.com &nbsp;·&nbsp; Beijing, China &nbsp;·&nbsp; wjiaxing94@gmail.com</p>
