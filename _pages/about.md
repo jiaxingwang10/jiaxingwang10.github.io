@@ -3,11 +3,7 @@ layout: about
 title: about
 permalink: /
 
-profile:
-  align: left
-  image: prof_pic.jpg
-  image_circular: false
-
+# 注意：这里我们删除了 profile 模块，不再使用默认的图片渲染方式
 selected_papers: true 
 social: true 
 
@@ -24,18 +20,39 @@ latest_posts:
 ---
 
 <style>
+  /* 隐藏默认标题 */
   .post-header {
     display: none !important;
   }
-  .profile {
-    width: 200px !important;
-    margin-top: 0px !important;
-    margin-right: 30px !important;
+  /* 微调社交图标的样式 */
+  .profile-info .contact-icons {
+    font-size: 2rem; /* 控制图标大小 */
+    text-align: left;
+    margin-top: 15px;
+  }
+  .profile-info .contact-icons a {
+    margin-right: 15px; /* 图标之间的间距 */
   }
 </style>
 
-<h1 style="margin-top: 0; font-size: 2.5rem;"><span style="font-weight: bold;">Jiaxing</span> Wang （王家兴）</h1>
-<p style="font-size: 1.1rem; margin-bottom: 20px;">Researcher, JD.com &nbsp;·&nbsp; Beijing, China &nbsp;·&nbsp; wjiaxing94@gmail.com</p>
+<div class="row" style="margin-bottom: 40px; align-items: center;">
+  
+  <div class="col-sm-4">
+    <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" class="img-fluid z-depth-1 rounded" alt="profile picture" style="width: 100%; max-width: 250px;">
+  </div>
+
+  <div class="col-sm-8 profile-info">
+    <h1 style="margin-top: 0; font-size: 2.8rem; font-weight: bold;">Jiaxing Wang <span style="font-weight: normal; font-size: 2.2rem;">(王家兴)</span></h1>
+    <p style="font-size: 1.2rem; margin-bottom: 5px;">Researcher, JD.com</p>
+    <p style="font-size: 1.1rem; margin-bottom: 5px; color: var(--global-text-color-light);">Beijing, China</p>
+    <p style="font-size: 1.1rem; margin-bottom: 15px;"><strong>Email:</strong> wjiaxing94 [at] gmail.com</p>
+
+    <div class="contact-icons">
+      {% include social.liquid %}
+    </div>
+  </div>
+</div>
+
 
 
 I am currently a researcher at JD.com. I obtained my Ph.D. degree from the Chinese Academy of Sciences, Institute of Automation, supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
