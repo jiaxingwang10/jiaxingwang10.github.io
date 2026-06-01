@@ -47,8 +47,12 @@ latest_posts:
     <p style="font-size: 1.1rem; margin-bottom: 5px; color: var(--global-text-color-light);">Beijing, China</p>
     <p style="font-size: 1.1rem; margin-bottom: 15px;"><strong>Email:</strong> wjiaxing94 [at] gmail.com</p>
 
-    <div class="contact-icons">
-      {% include social.html %}
+    <div class="social" style="font-size: 2rem; margin-top: 15px;">
+      <div class="contact-icons">
+        <a href="https://scholar.google.com/citations?user=EHGfstcAAAAJ&hl=en" title="Google Scholar" target="_blank"><i class="ai ai-google-scholar"></i></a>
+        <a href="https://github.com/jiaxingwang10" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/..." title="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+      </div>
     </div>
   </div>
 </div>
