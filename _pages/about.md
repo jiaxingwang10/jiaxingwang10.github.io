@@ -2,23 +2,48 @@
 layout: about
 title: about
 permalink: /
-subtitle: “Researcher, JD.com &nbsp;·&nbsp; Beijing, China &nbsp;·&nbsp; wjiaxing94@gmail.com”
+# 注意：subtitle 这里的引号请直接删掉，解决你上个截图里的“显眼包”问题
+subtitle: Researcher, JD.com | Beijing, China | wjiaxing94@gmail.com
 
 profile:
-  align: left
+  align: left         # 👈 保持靠左
   image: prof_pic.jpg
-  image_circular: false # crops the image to make it circular
+  image_circular: false
+  # 如果你不想要照片下面显示地址，可以把 address 这几行删了，或者留空
+  address: 
 
+# 下面这段代码是实现“右边对齐”的灵魂
 style: |
+  /* 1. 让个人简介部分变成“并排”布局 */
   .profile {
-    width: 200px !important;   /* 👈 这里调整照片宽度，你可以改成 150px 或更小 */
-    margin-top: 5px !important; /* 👈 微调这个值，直到照片顶部和姓名完美平齐 */
+    float: left;
+    width: 200px !important;   /* 👈 调整照片宽度 */
+    margin-top: 0 !important;   /* 👈 强制顶格 */
     margin-right: 30px !important;
   }
+
+  /* 2. 让名字和副标题往右顶，不被照片压在下面 */
   .post-header {
-    margin-bottom: 20px;
+    display: block;
+    overflow: hidden;         /* 👈 开启 BFC，让文字避开浮动的图片 */
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 
+  header h1 {
+    margin-top: 0 !important;  /* 👈 名字顶格 */
+    font-size: 2.2rem;         /* 👈 名字可以稍微大一点点 */
+  }
+
+  /* 3. 手机端自动恢复堆叠，防止太挤 */
+  @media (max-width: 576px) {
+    .profile {
+      float: none;
+      width: 100% !important;
+      margin: 0 auto 20px auto !important;
+    }
+  }
+---
 
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
