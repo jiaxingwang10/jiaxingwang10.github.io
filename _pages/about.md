@@ -2,48 +2,43 @@
 layout: about
 title: about
 permalink: /
-# 注意：subtitle 这里的引号请直接删掉，解决你上个截图里的“显眼包”问题
-subtitle: Researcher, JD.com | Beijing, China | wjiaxing94@gmail.com
+# 注意：subtitle 保持原样，无需引号，干净整洁
+subtitle: Researcher, JD.com · Beijing, China · wjiaxing94@gmail.com
 
 profile:
-  align: left         # 👈 保持靠左
+  align: left         # 👈 图片靠左，顶格
   image: prof_pic.jpg
   image_circular: false
-  # 如果你不想要照片下面显示地址，可以把 address 这几行删了，或者留空
-  address: 
+  address:            # 留空，删除原来的地址信息
 
-# 下面这段代码是实现“右边对齐”的灵魂
+# Jekyll 网页功能的控制中心
+# 这些代码原本错误地出现在正文里，现在它们回家了
+news: true           # 启用新闻
+selected_papers: true # 启用精选论文
+social: true          # 启用社交图标
+
+# 自定义样式：实现左图右文对齐，强制顶格
 style: |
-  /* 1. 让个人简介部分变成“并排”布局 */
   .profile {
     float: left;
-    width: 200px !important;   /* 👈 调整照片宽度 */
-    margin-top: 0 !important;   /* 👈 强制顶格 */
+    width: 200px !important;   /* 调整照片宽度 */
+    margin-top: 0 !important;   /* 强制照片顶格 */
     margin-right: 30px !important;
   }
-
-  /* 2. 让名字和副标题往右顶，不被照片压在下面 */
   .post-header {
     display: block;
-    overflow: hidden;         /* 👈 开启 BFC，让文字避开浮动的图片 */
+    overflow: hidden;         /* 文字绕流，不钻到底部 */
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
-
   header h1 {
-    margin-top: 0 !important;  /* 👈 名字顶格 */
-    font-size: 2.2rem;         /* 👈 名字可以稍微大一点点 */
-  }
-
-  /* 3. 手机端自动恢复堆叠，防止太挤 */
-  @media (max-width: 576px) {
-    .profile {
-      float: none;
-      width: 100% !important;
-      margin: 0 auto 20px auto !important;
-    }
+    margin-top: 0 !important;  /* 名字顶格 */
   }
 ---
+
+I am currently a researcher at [JD.com](http://JD.com). I obtained my Ph.D. degree from the Chinese Academy of Sciences, Institute of Automation, supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
+
+My research focuses on Data-centric AI and AI Infrastructure, with a specific emphasis on data mixture optimization, data selection, and data synthesis to construct a self-evolving data flywheel, as well as efficient model training and inference. These techniques have been successfully deployed in production within JD Retail's commodity understanding, yielding substantial business impact.
 
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
