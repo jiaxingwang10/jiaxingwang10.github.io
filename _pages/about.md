@@ -2,17 +2,23 @@
 layout: about
 title: about
 permalink: /
-# 1. 这里填你的副标题，记得去掉那对多余的引号
-subtitle: Researcher, JD.com · Beijing, China · wjiaxing94@gmail.com
 
 profile:
-  align: left           # 👈 改回左边，实现顶格
+  align: left
   image: prof_pic.jpg
-  image_circular: false
-  # address 已经包含在 subtitle 里了，这里留空，防止照片下面出现冗余文字
-  more_info: >
+  image_circular: false 
 
-# 2. 以下完全保留你刚才贴的原始控制逻辑，保证 News 和 Papers 正常显示
+style: |
+  .post-header {
+    display: none !important; /* 👈 关键：隐藏默认在最顶部的姓名和副标题 */
+  }
+  .profile {
+    width: 200px !important;   
+    margin-top: 0px !important; /* 👈 设为 0，让照片顶部和右侧第一行字完美对齐 */
+    margin-right: 30px !important;
+  }
+
+
 selected_papers: true 
 social: true 
 
@@ -25,26 +31,12 @@ latest_posts:
   enabled: true
   scrollable: true 
   limit: 3 
-
-# 3. 关键：注入这段 CSS，强制把“姓名栏”拉到照片右边
-style: |
-  .profile {
-    float: left;
-    width: 200px !important;
-    margin-top: 0 !important;
-    margin-right: 30px !important;
-  }
-  .post-header {
-    display: block;
-    overflow: hidden;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-  header h1 {
-    margin-top: 0 !important;
-    line-height: 1.2;
-  }
+  
 ---
+
+<h1 style="margin-top: 0; font-size: 2.5rem;"><span style="font-weight: bold;">Jiaxing</span> Wang （王家兴）</h1>
+<p style="font-size: 1.1rem; margin-bottom: 20px;">Researcher, JD.com &nbsp;·&nbsp; Beijing, China &nbsp;·&nbsp; wjiaxing94@gmail.com</p>
+
 
 I am currently a researcher at JD.com. I obtained my Ph.D. degree from the Chinese Academy of Sciences, Institute of Automation, supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
 
