@@ -23,7 +23,7 @@ latest_posts:
     display: none !important;
   }
   
-  /* 2. 导航栏：顶满页面顶部，链接靠右 */
+  /* 2. 导航栏：顶满页面顶部，链接靠右，与内容区域右边对齐 */
   header, nav, #navbar, nav.navbar, .navbar {
     top: 0 !important;
     left: 0 !important;
@@ -32,23 +32,20 @@ latest_posts:
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     width: 100% !important;
-    max-width: 100% !important;
   }
   nav.navbar, .navbar {
     display: flex !important;
-    justify-content: flex-end !important;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+    justify-content: center !important;
   }
   nav .container, nav .container-fluid,
   .navbar .container, .navbar .container-fluid,
   .navbar > .container {
     display: flex !important;
     justify-content: flex-end !important;
-    max-width: 100% !important;
+    max-width: 930px !important;
     width: 100% !important;
-    margin: 0 !important;
-    padding: 0 20px !important;
+    margin: 0 auto !important;
+    padding: 8px 0 !important;
   }
   header nav ul, nav.navbar ul, .navbar-nav,
   .navbar-collapse, #navbarNav {
@@ -60,6 +57,10 @@ latest_posts:
   }
   .navbar-brand, nav .brand {
     display: none !important;
+  }
+  /* 导航栏字体稍大 */
+  nav a, .navbar a, .nav-item a, .nav-link {
+    font-size: 1.05rem !important;
   }
 
   /* 3. 社交图标样式 */
@@ -73,7 +74,7 @@ latest_posts:
   }
 </style>
 
-<div style="padding-top: 100px; padding-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+<div style="padding-top: 60px; padding-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
   
   <div style="width: 32%; min-width: 200px; padding-right: 20px;">
     <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" alt="profile picture" style="width: 100%; max-width: 250px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
@@ -119,4 +120,3 @@ My research focuses on Data-centric AI and AI Infrastructure, with a specific em
     }
   });
 </script>
-
