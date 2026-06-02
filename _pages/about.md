@@ -3,7 +3,6 @@ layout: about
 title: about
 permalink: /
 
-# 注意：这里我们删除了 profile 模块，不再使用默认的图片渲染方式
 selected_papers: true 
 social: true 
 
@@ -16,19 +15,20 @@ latest_posts:
   enabled: true
   scrollable: true 
   limit: 3 
-  
 ---
 
 <style>
-  /* 🌟 优雅隐藏法：不使用 display:none，而是让标题隐形并把高度设为0，
-     这样既隐藏了原标题，又保留了模板原生的安全距离，彻底解决重叠问题！ */
+  /* 1. 彻底干掉默认的巨大标题 */
   .post-header {
-    visibility: hidden;
-    height: 0;
-    margin-bottom: 2rem; 
+    display: none !important;
+  }
+  
+  /* 2. 完美解决导航栏靠左的问题，直接针对 al-folio 的底层 ID 发号施令 */
+  #navbarNav {
+    justify-content: flex-end !important;
   }
 
-  /* 保留社交图标样式 */
+  /* 3. 社交图标样式 */
   .profile-info .contact-icons {
     font-size: 2rem; 
     text-align: left;
@@ -39,12 +39,11 @@ latest_posts:
   }
 </style>
 
-<div class="row" style="margin-bottom: 40px; align-items: center;">
+<div class="row mt-5" style="margin-top: 5rem !important; align-items: center;">
   
   <div class="col-sm-4">
     <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" class="img-fluid z-depth-1 rounded" alt="profile picture" style="width: 100%; max-width: 250px;">
   </div>
-
 
   <div class="col-sm-8 profile-info">
     <h1 style="margin-top: 0; font-size: 2.8rem; font-weight: bold;">Jiaxing Wang <span style="font-weight: normal; font-size: 2.2rem;">(王家兴)</span></h1>
@@ -62,12 +61,9 @@ latest_posts:
   </div>
 </div>
 
-
-
 I am currently a researcher at JD.com. I obtained my Ph.D. degree from the Chinese Academy of Sciences, Institute of Automation, supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
 
 My research focuses on Data-centric AI and AI Infrastructure, with a specific emphasis on data mixture optimization, data selection, and data synthesis to construct a self-evolving data flywheel, as well as efficient model training and inference. These techniques have been successfully deployed in production within JD Retail's commodity understanding, yielding substantial business impact.
-
 
 
 <div id="services-section" style="margin-top: 40px;">
@@ -93,5 +89,3 @@ My research focuses on Data-centric AI and AI Infrastructure, with a specific em
     }
   });
 </script>
-
-
