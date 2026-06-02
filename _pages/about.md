@@ -74,7 +74,7 @@ latest_posts:
   }
 </style>
 
-<div style="padding-top: 60px; padding-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+<div style="padding-top: 40px; padding-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
   
   <div style="width: 32%; min-width: 200px; padding-right: 20px;">
     <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" alt="profile picture" style="width: 100%; max-width: 250px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
