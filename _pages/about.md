@@ -64,6 +64,29 @@ I am currently a researcher at JD.com. I obtained my Ph.D. degree from the Chine
 My research focuses on Data-centric AI and AI Infrastructure, with a specific emphasis on data mixture optimization, data selection, and data synthesis to construct a self-evolving data flywheel, as well as efficient model training and inference. These techniques have been successfully deployed in production within JD Retail's commodity understanding, yielding substantial business impact.
 
 
-<!-- Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically. -->
 
-<!-- Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.-->
+<div id="services-section" style="margin-top: 40px;">
+  <h2><span style="font-weight: bold;">Services</span></h2>
+  <hr>
+  <ul style="list-style-type: none; padding-left: 0; line-height: 1.8;">
+    <li style="margin-bottom: 10px;">
+      <i class="fas fa-check-circle" style="color: var(--global-theme-color); margin-right: 8px;"></i>
+      <strong>Program Committee Member / Reviewer:</strong> NeurIPS 21-26, ICML 22-26, ICLR 22-26, ACL 26
+    </li>
+  </ul>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // 找到主题自动生成的代表作区域 (.publications)
+    const papersSection = document.querySelector('.publications');
+    const servicesSection = document.getElementById('services-section');
+    
+    // 把 Services 强行“传送”到代表作的下方
+    if (papersSection && servicesSection) {
+      papersSection.insertAdjacentElement('afterend', servicesSection);
+    }
+  });
+</script>
+
+
