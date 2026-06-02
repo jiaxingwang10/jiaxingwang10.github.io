@@ -23,10 +23,43 @@ latest_posts:
     display: none !important;
   }
   
-  /* 2. 强行针对所有可能的导航栏列表，推到右边 */
-  header nav ul {
-    margin-left: auto !important;
+  /* 2. 导航栏：顶满页面顶部，链接靠右 */
+  header, nav, #navbar, nav.navbar, .navbar {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  nav.navbar, .navbar {
+    display: flex !important;
     justify-content: flex-end !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  nav .container, nav .container-fluid,
+  .navbar .container, .navbar .container-fluid,
+  .navbar > .container {
+    display: flex !important;
+    justify-content: flex-end !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 20px !important;
+  }
+  header nav ul, nav.navbar ul, .navbar-nav,
+  .navbar-collapse, #navbarNav {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+  }
+  .navbar-brand, nav .brand {
+    display: none !important;
   }
 
   /* 3. 社交图标样式 */
@@ -86,3 +119,4 @@ My research focuses on Data-centric AI and AI Infrastructure, with a specific em
     }
   });
 </script>
+
