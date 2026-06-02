@@ -18,13 +18,14 @@ latest_posts:
 ---
 
 <style>
-  /* 1. 彻底干掉默认的巨大标题 */
+  /* 1. 彻底隐藏默认标题 */
   .post-header {
     display: none !important;
   }
   
-  /* 2. 完美解决导航栏靠左的问题，直接针对 al-folio 的底层 ID 发号施令 */
-  #navbarNav {
+  /* 2. 强行针对所有可能的导航栏列表，推到右边 */
+  header nav ul {
+    margin-left: auto !important;
     justify-content: flex-end !important;
   }
 
@@ -39,13 +40,13 @@ latest_posts:
   }
 </style>
 
-<div class="row mt-5" style="margin-top: 5rem !important; align-items: center;">
+<div style="padding-top: 100px; padding-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
   
-  <div class="col-sm-4">
-    <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" class="img-fluid z-depth-1 rounded" alt="profile picture" style="width: 100%; max-width: 250px;">
+  <div style="width: 32%; min-width: 200px; padding-right: 20px;">
+    <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" alt="profile picture" style="width: 100%; max-width: 250px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
   </div>
 
-  <div class="col-sm-8 profile-info">
+  <div class="profile-info" style="width: 65%; flex-grow: 1; min-width: 300px;">
     <h1 style="margin-top: 0; font-size: 2.8rem; font-weight: bold;">Jiaxing Wang <span style="font-weight: normal; font-size: 2.2rem;">(王家兴)</span></h1>
     <p style="font-size: 1.2rem; margin-bottom: 5px;">Researcher, JD.com</p>
     <p style="font-size: 1.1rem; margin-bottom: 5px; color: var(--global-text-color-light);">Beijing, China</p>
@@ -60,7 +61,6 @@ latest_posts:
     </div>
   </div>
 </div>
-
 I am currently a researcher at JD.com. I obtained my Ph.D. degree from the Chinese Academy of Sciences, Institute of Automation, supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
 
 My research focuses on Data-centric AI and AI Infrastructure, with a specific emphasis on data mixture optimization, data selection, and data synthesis to construct a self-evolving data flywheel, as well as efficient model training and inference. These techniques have been successfully deployed in production within JD Retail's commodity understanding, yielding substantial business impact.
@@ -79,11 +79,8 @@ My research focuses on Data-centric AI and AI Infrastructure, with a specific em
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // 找到主题自动生成的代表作区域 (.publications)
     const papersSection = document.querySelector('.publications');
     const servicesSection = document.getElementById('services-section');
-    
-    // 把 Services 强行“传送”到代表作的下方
     if (papersSection && servicesSection) {
       papersSection.insertAdjacentElement('afterend', servicesSection);
     }
