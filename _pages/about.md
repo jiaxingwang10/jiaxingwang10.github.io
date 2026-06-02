@@ -24,14 +24,23 @@ latest_posts:
   .post-header {
     display: none !important;
   }
+  
+  /* 🌟 核心修复：强制导航栏菜单永远靠右对齐 */
+  .navbar-collapse {
+    justify-content: flex-end !important;
+  }
+  .navbar-nav {
+    margin-left: auto !important;
+  }
+
   /* 微调社交图标的样式 */
   .profile-info .contact-icons {
-    font-size: 2rem; /* 控制图标大小 */
+    font-size: 2rem; 
     text-align: left;
     margin-top: 15px;
   }
   .profile-info .contact-icons a {
-    margin-right: 15px; /* 图标之间的间距 */
+    margin-right: 15px; 
   }
 </style>
 
