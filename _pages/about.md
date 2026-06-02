@@ -20,22 +20,15 @@ latest_posts:
 ---
 
 <style>
-  /* 隐藏默认标题 */
+  /* 🌟 优雅隐藏法：不使用 display:none，而是让标题隐形并把高度设为0，
+     这样既隐藏了原标题，又保留了模板原生的安全距离，彻底解决重叠问题！ */
   .post-header {
-    display: none !important;
-  }
-  
-  /* 🌟 终极修复：强制导航栏占满宽度并靠右 */
-  header .navbar-collapse {
-    justify-content: flex-end !important;
-    width: 100% !important;
-  }
-  header .navbar-nav {
-    margin-left: auto !important;
-    float: right !important;
+    visibility: hidden;
+    height: 0;
+    margin-bottom: 2rem; 
   }
 
-  /* 微调社交图标的样式 */
+  /* 保留社交图标样式 */
   .profile-info .contact-icons {
     font-size: 2rem; 
     text-align: left;
@@ -51,6 +44,7 @@ latest_posts:
   <div class="col-sm-4">
     <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" class="img-fluid z-depth-1 rounded" alt="profile picture" style="width: 100%; max-width: 250px;">
   </div>
+
 
   <div class="col-sm-8 profile-info">
     <h1 style="margin-top: 0; font-size: 2.8rem; font-weight: bold;">Jiaxing Wang <span style="font-weight: normal; font-size: 2.2rem;">(王家兴)</span></h1>
