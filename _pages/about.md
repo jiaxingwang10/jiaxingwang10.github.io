@@ -25,12 +25,14 @@ latest_posts:
     display: none !important;
   }
   
-  /* 🌟 核心修复：强制导航栏菜单永远靠右对齐 */
-  .navbar-collapse {
+  /* 🌟 终极修复：强制导航栏占满宽度并靠右 */
+  header .navbar-collapse {
     justify-content: flex-end !important;
+    width: 100% !important;
   }
-  .navbar-nav {
+  header .navbar-nav {
     margin-left: auto !important;
+    float: right !important;
   }
 
   /* 微调社交图标的样式 */
