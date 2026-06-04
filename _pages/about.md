@@ -95,7 +95,7 @@ latest_posts:
     </div>
   </div>
 </div>
-I am currently a researcher at JD.com. I obtained my Ph.D. degree from the Chinese Academy of Sciences, Institute of Automation, supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
+I am currently a researcher at JD.com. I obtained my Ph.D. degree from [National Laboratory of Pattern Recognition](https://nlpr.ia.ac.cn/) from [CASIA](ia.cas.cn), supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
 
 My research focuses on Data-centric AI and AI Infrastructure, with a specific emphasis on data mixture optimization, data selection, and data synthesis to construct a self-evolving data flywheel, as well as efficient model training and inference. These techniques have been successfully deployed in production within JD Retail's commodity understanding, yielding substantial business impact.
 
