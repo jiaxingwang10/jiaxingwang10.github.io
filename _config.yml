@@ -290,6 +290,9 @@ sass:
 # -----------------------------------------------------------------------------
 
 jekyll-minifier:
+  # cssminify2 corrupts modern CSS custom properties such as --spacing.
+  # The theme CSS is already compressed, so leave CSS untouched in production.
+  compress_css: false
   compress_javascript: false # set to false since we are using terser as the js minifier
   exclude: ["robots.txt", "assets/js/search/*.js"]
 
