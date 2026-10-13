@@ -3,11 +3,11 @@ layout: about
 title: about
 permalink: /
 
-selected_papers: true 
-social: true 
+selected_papers: false
+social: false
 
 announcements:
-  enabled: true 
+  enabled: false
   scrollable: true 
   limit: 5 
 
@@ -90,7 +90,7 @@ latest_posts:
       <div class="contact-icons">
         <a href="https://scholar.google.com/citations?user=EHGfstcAAAAJ&hl=en" title="Google Scholar" target="_blank"><i class="ai ai-google-scholar"></i></a>
         <a href="https://github.com/jiaxingwang10" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
-        <a href="https://www.linkedin.com/in/..." title="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://www.linkedin.com/in/jiaxing-wang-bb289b3a5/" title="LinkedIn" target="_blank"><i class="fab fa-linkedin"></i></a>
       </div>
     </div>
   </div>
@@ -99,6 +99,15 @@ I am currently a researcher at JD.com. I obtained my Ph.D. degree from [National
 
 My research focuses on Data-centric AI and AI Infrastructure, with a specific emphasis on data mixture optimization, data selection, and data synthesis to construct a self-evolving data flywheel, as well as efficient model training and inference. These techniques have been successfully deployed in production within JD Retail's commodity understanding, yielding substantial business impact.
 
+<h2>
+  <a href="{{ '/news/' | relative_url }}" style="color: inherit">news</a>
+</h2>
+{% include news.liquid limit=true %}
+
+<h2>
+  <a href="{{ '/publications/' | relative_url }}" style="color: inherit">selected publications</a>
+</h2>
+{% include selected_papers.liquid %}
 
 <div id="services-section" style="margin-top: 40px;">
   <h2><span style="font-weight: bold;">Services</span></h2>
@@ -108,15 +117,9 @@ My research focuses on Data-centric AI and AI Infrastructure, with a specific em
       <i class="fas fa-check-circle" style="color: var(--global-theme-color); margin-right: 8px;"></i>
       <strong>Program Committee Member / Reviewer:</strong> NeurIPS 21-26, ICML 22-26, ICLR 22-26, ACL 26
     </li>
+    <li style="margin-bottom: 10px;">
+      <i class="fas fa-award" style="color: var(--global-theme-color); margin-right: 8px;"></i>
+      <strong>Top Reviewer:</strong> NeurIPS 2026
+    </li>
   </ul>
 </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const papersSection = document.querySelector('.publications');
-    const servicesSection = document.getElementById('services-section');
-    if (papersSection && servicesSection) {
-      papersSection.insertAdjacentElement('afterend', servicesSection);
-    }
-  });
-</script>
