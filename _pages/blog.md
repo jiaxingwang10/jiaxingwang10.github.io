@@ -29,6 +29,177 @@ pagination:
   </div>
   {% endif %}
 
+{% assign designing_series = site.posts | where: "series", "designing-what-models-learn" | sort: "series_order" %}
+{% if designing_series.size > 0 %}
+  <section class="blog-series" aria-labelledby="designing-series-title">
+    <div class="blog-series__header">
+      <p class="blog-series__eyebrow">A THREE-PART SERIES</p>
+      <h2 id="designing-series-title">Designing What Models Learn</h2>
+      <p>Essays on targets, training distributions, and data operators.</p>
+    </div>
+
+    <div class="blog-series__grid">
+      {% for post in designing_series %}
+        <article class="blog-series__card">
+          <a href="{{ post.url | relative_url }}" aria-label="Read Part {{ post.series_order }}: {{ post.title }}">
+            {% if post.thumbnail %}
+              <div class="blog-series__image-wrap">
+                <img src="{{ post.thumbnail | relative_url }}" alt="" loading="{% if post.series_order == 1 %}eager{% else %}lazy{% endif %}">
+              </div>
+            {% endif %}
+            <div class="blog-series__body">
+              <p class="blog-series__part">Part {{ post.series_order }} of {{ designing_series.size }}</p>
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.description }}</p>
+              <span class="blog-series__link">Read Part {{ post.series_order }} <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <style>
+    .blog-series {
+      margin: 2.25rem 0 2.75rem;
+      padding: clamp(1.25rem, 3vw, 2rem);
+      border: 1px solid var(--global-divider-color);
+      border-radius: 1rem;
+      background:
+        radial-gradient(circle at top right, rgba(181, 9, 172, 0.10), transparent 36%),
+        var(--global-bg-color);
+    }
+
+    .blog-series__header {
+      max-width: 46rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .blog-series__eyebrow,
+    .blog-series__part {
+      margin: 0 0 0.35rem;
+      color: var(--global-theme-color);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .blog-series__header h2 {
+      margin: 0 0 0.4rem;
+      color: var(--global-text-color);
+      font-size: clamp(1.8rem, 4vw, 2.65rem);
+      line-height: 1.1;
+    }
+
+    .blog-series__header > p:last-child {
+      margin: 0;
+      color: var(--global-text-color-light);
+      font-size: 1.05rem;
+    }
+
+    .blog-series__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .blog-series__card {
+      overflow: hidden;
+      border: 1px solid var(--global-divider-color);
+      border-radius: 0.8rem;
+      background: var(--global-card-bg-color, var(--global-bg-color));
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .blog-series__card:hover {
+      transform: translateY(-3px);
+      border-color: var(--global-theme-color);
+      box-shadow: 0 0.75rem 1.75rem rgba(0, 0, 0, 0.10);
+    }
+
+    .blog-series__card > a {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .blog-series__image-wrap {
+      aspect-ratio: 16 / 8.5;
+      overflow: hidden;
+      border-bottom: 1px solid var(--global-divider-color);
+      background: #fbfafc;
+    }
+
+    .blog-series__image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .blog-series__body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 1rem;
+    }
+
+    .blog-series__body h3 {
+      margin: 0 0 0.65rem;
+      color: var(--global-text-color);
+      font-size: 1.12rem;
+      line-height: 1.3;
+      text-transform: none;
+    }
+
+    .blog-series__body > p:not(.blog-series__part) {
+      margin-bottom: 1rem;
+      color: var(--global-text-color-light);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .blog-series__link {
+      margin-top: auto;
+      color: var(--global-theme-color);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .blog-series__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .blog-series__card > a {
+        display: grid;
+        grid-template-columns: minmax(9rem, 34%) 1fr;
+      }
+
+      .blog-series__image-wrap {
+        height: 100%;
+        min-height: 10rem;
+        border-right: 1px solid var(--global-divider-color);
+        border-bottom: 0;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .blog-series__card > a {
+        display: flex;
+      }
+
+      .blog-series__image-wrap {
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--global-divider-color);
+      }
+    }
+  </style>
+{% endif %}
+
 {% if site.display_tags and site.display_tags.size > 0 or site.display_categories and site.display_categories.size > 0 %}
 
   <div class="tag-category-list">
@@ -110,6 +281,10 @@ pagination:
     {% endif %}
 
     {% for post in postlist %}
+
+    {% if post.series == "designing-what-models-learn" %}
+      {% continue %}
+    {% endif %}
 
     {% if post.external_source == blank %}
       {% assign read_time = post.content | number_of_words | divided_by: 180 | plus: 1 %}

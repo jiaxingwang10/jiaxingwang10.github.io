@@ -6,6 +6,9 @@ description: "A bilevel view of data engineering: targets define the objective, 
 tags: llm data-curation bilevel-optimization data-selection data-synthesis reinforcement-learning
 categories: research
 thumbnail: assets/img/blog/data-curation/blade-procedure.png
+series: designing-what-models-learn
+series_title: "Designing What Models Learn"
+series_order: 3
 giscus_comments: false
 related_posts: false
 toc:
@@ -13,6 +16,10 @@ toc:
 ---
 
 <!-- Series draft v2. Add the Advancement paper/arXiv link after it becomes public. -->
+
+> **Designing What Models Learn · Part 3 of 3**<br>
+> *Essays on targets, training distributions, and data operators*<br>
+> [Advancement vs. Acceleration]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}) · [What Makes Data Good?]({{ '/blog/2026/what-makes-data-good/' | relative_url }}) · **From Target to Operator**
 
 Suppose you run a warehouse full of training data.
 

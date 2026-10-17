@@ -1,18 +1,27 @@
 ---
 layout: post
-title: "There Is No Such Thing as Good Data—Without a Target"
+title: "What Makes Data Good?"
 date: 2026-10-13 11:00:00 +0800
 description: "Quality and diversity are useful words, but incomplete objectives. A target-relative view changes what we score, select, and synthesize."
 tags: llm data-curation data-quality diversity distribution-design
 categories: research
-thumbnail: assets/img/blog/data-curation/mixture-setup.png
+thumbnail: assets/img/blog/data-curation/target-driven-data-pipeline.svg
+series: designing-what-models-learn
+series_title: "Designing What Models Learn"
+series_order: 2
 giscus_comments: false
 related_posts: false
 toc:
   sidebar: right
 ---
 
-<!-- Series draft v2. Add the Advancement paper/arXiv link after it becomes public. -->
+<!-- Series draft v3. Add the Advancement paper/arXiv link after it becomes public. -->
+
+<p class="lead text-muted">Quality, Diversity, and the Missing Target</p>
+
+> **Designing What Models Learn · Part 2 of 3**<br>
+> *Essays on targets, training distributions, and data operators*<br>
+> [Advancement vs. Acceleration]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}) · **What Makes Data Good?** · [From Target to Operator]({{ '/blog/2026/from-target-to-operator/' | relative_url }})
 
 Imagine two training examples.
 
@@ -22,15 +31,11 @@ Which one is better data?
 
 For a general-purpose language model, perhaps the first. For a model that must recover from mistakes in mathematical reasoning, perhaps the second. For a product-description generator, probably neither.
 
-Yet much of data engineering starts by asking whether a sample is “high quality,” as if quality were printed somewhere inside the sample. We build classifiers, reward models, heuristics, and LLM judges to uncover it. We then add *diversity* so that the high-quality set does not become too narrow.
+Yet much of data engineering starts by asking whether a sample is “high quality,” as if quality were printed somewhere inside the sample. We try to uncover it with hand-written rules such as [RefinedWeb](https://arxiv.org/abs/2306.01116), language-model perplexity as in [CCNet](https://arxiv.org/abs/1911.00359), classifiers as in [DataComp-LM](https://arxiv.org/abs/2406.11794), learned quality dimensions as in [QuRating](https://arxiv.org/abs/2402.09739), and LLM judges as in [AlpaGasus](https://arxiv.org/abs/2307.08701) and [DEITA](https://arxiv.org/abs/2312.15685). We then add *diversity* so that the high-quality set does not become too narrow.
 
-This recipe often works. But the language hides a missing variable:
+This recipe often works. But the language hides two missing variables:
 
 > **Quality according to whom—and diversity over what?**
-
-My claim is not that quality and diversity are useless. It is that they are **underdefined without a target**. They are tools for designing a training distribution, not universal properties from which the right distribution automatically follows.
-
-## Quality is a relationship disguised as an adjective
 
 Suppose the raw pool follows $p_{\mathrm{pool}}(x)$, and a quality score induces an acceptance probability $a(x)$. After filtering, we train on
 
@@ -41,185 +46,180 @@ q(x)
 {\int p_{\mathrm{pool}}(x')a(x')\,dx'}.
 $$
 
-The scorer has not discovered a label attached to each sample by nature. It has changed the probability with which the learner sees different regions of the pool.
+Operationally, the scorer does not uncover a natural label called *quality*. It decides how frequently different parts of the pool will appear during training.
 
-That change always has a direction.
+The direction comes from a reference:
 
-A perplexity filter favors text that resembles the language model used to score it. A classifier favors text that resembles its positive examples. An LLM judge favors text that matches its rubric, preferences, and blind spots. Even a handcrafted rule such as “remove documents with too little punctuation” encodes a view of what useful text should look like.
+- a perplexity filter favors text that resembles the language model and corpus used to construct it;
+- a classifier favors text resembling its positive examples;
+- an LLM judge favors text that satisfies its rubric as the judge understands it;
+- a handcrafted rule favors documents with the surface properties encoded by the rule.
 
-Calling the output *higher quality* makes this operation sound neutral. It is not neutral. It is a distribution shift—sometimes an extremely useful one.
+An LLM judge does not intentionally seek its blind spots. But outside its competence it may reward fluent mistakes, penalize unfamiliar valid formats, or miss a capability the target needs. The accepted distribution reflects both the rubric and the judge's limitations.
 
-## One word, opposite recipes
+Calling the result *higher quality* makes the operation sound neutral. A more informative description is: the scorer has shaped the training distribution toward a particular reference.
+
+## “High quality” has supported opposite recipes
 
 The ambiguity becomes obvious when we list what the literature has called “high-quality” data.
 
-Sometimes, **hard examples are good**:
+Sometimes, **hard examples are valuable**. [Forgetting events](https://arxiv.org/abs/1812.05159), [GraNd, and EL2N](https://arxiv.org/abs/2107.07075) use instability, gradient magnitude, or early training dynamics to identify informative examples.
 
-- high-loss samples carry more learning signal;
-- small-margin samples refine a decision boundary;
-- frequently forgotten samples reveal unstable knowledge;
-- examples with large gradients promise a larger parameter update.
+Sometimes, **easy examples are safer**. Low-loss or high-confidence samples may be less likely to be mislabeled, as in [Confident Learning](https://arxiv.org/abs/1911.00068), while easy-to-hard ordering underlies [curriculum learning](https://dl.acm.org/doi/10.1145/1553374.1553380). Here, unusual difficulty may signal noise.
 
-Sometimes, **easy examples are good**:
+Sometimes, **preferred examples are valuable**. [QuRating](https://arxiv.org/abs/2402.09739) scores several human-facing qualities; [AlpaGasus](https://arxiv.org/abs/2307.08701) filters instruction data with a strong LLM; [DEITA](https://arxiv.org/abs/2312.15685) combines complexity, quality, and diversity.
 
-- low-loss samples are less likely to be mislabeled;
-- confident examples are safer for self-training;
-- simple examples may support a curriculum;
-- outliers and unusually hard samples may be noise rather than useful difficulty.
+And sometimes, **target-influential examples are valuable**. [Influence functions](https://arxiv.org/abs/1703.04730) and methods such as [LESS](https://arxiv.org/abs/2402.04333) ask how a training example affects a specified validation target.
 
-Sometimes, **preferred examples are good**: an LLM judge scores correctness, clarity, complexity, style, safety, or some weighted combination of them.
+These definitions can rank the same sample in opposite directions: a high-loss example is informative under one story and suspicious under another.
 
-And sometimes, **influential examples are good**: influence functions, gradient matching, or hypergradient methods estimate how training on a sample changes performance on a particular validation target.
-
-These definitions do not merely differ at the edges. They can rank the same sample in opposite directions. A high-loss example is valuable under an informativeness story and suspicious under a label-noise story. An unusual example improves coverage under one representation and becomes an outlier under another.
-
-| Signal called “quality” | What it actually favors | Hidden question |
+| Signal called “quality” | What it favors | The unresolved question |
 | --- | --- | --- |
-| High loss / forgetting / small margin | Difficulty or current model uncertainty | Is difficulty learnable signal or noise? |
-| Low loss / high confidence | Cleanliness and compatibility | Are easy examples informative enough? |
-| LLM-as-a-Judge | Agreement with a model and rubric | Does the judge encode the desired capability? |
-| Influence / hypergradient | Improvement on a validation target | Is the target representative and robust? |
+| High loss, forgetting, large gradient | Difficulty or current model uncertainty | Is the difficulty learnable signal or noise? |
+| Low loss or high confidence | Cleanliness and compatibility | Are easy examples informative enough? |
+| LLM judgment | Agreement with a model and rubric | Does that rubric represent the desired capability? |
+| Influence or target-gradient similarity | Improvement on a validation target | Is the target representative, and is the approximation reliable? |
 
-The last family is conceptually different. Influence is not trying to recover context-free quality; it already asks a target-relative question. Its practical approximations may be imperfect, but the objective is explicit.
+Gradient matching deserves a separate note. It is not automatically an influence method. [GRAD-MATCH](https://arxiv.org/abs/2103.00123), for example, selects a subset whose gradient matches the gradient of a training or validation set. It becomes target-relative when the gradient being matched comes from a target validation set; matching the full training gradient instead is primarily a compression objective. The use of gradients alone does not determine which question a method answers.
 
-So “quality” is not one disputed quantity waiting for a better estimator. It is an overloaded interface covering several different desiderata: cleanliness, difficulty, informativeness, preference, and downstream utility. Before debating the best quality model, we should decide which of these problems we are solving.
+There is no single winner here. The scores estimate different desiderata: cleanliness, difficulty, preference, training-set fidelity, or downstream utility.
 
-## Successful filters often contain a hidden target
+## Successful filters reveal their reference
 
-Consider three familiar families of methods.
+Several influential filtering pipelines become easier to interpret once we ask what reference supplies their direction.
 
-**KenLM filtering**, as used in pipelines such as [CCNet](https://arxiv.org/abs/1911.00359), scores web documents with a language model trained on a curated reference such as Wikipedia. Low perplexity means “this document looks more like the reference.” The filter works by moving the web distribution toward that reference.
+[CCNet](https://arxiv.org/abs/1911.00359) uses a KenLM model trained on Wikipedia to score web documents. Low perplexity means that a document resembles the reference language distribution. The resulting filter moves a broad web crawl toward Wikipedia-like text.
 
-**DCLM-style classifiers** ([paper](https://arxiv.org/abs/2406.11794)) learn to distinguish a desirable positive corpus from broad web data. Again, the positive corpus supplies a direction. Change it, and the meaning of quality changes with it.
+[DataComp-LM](https://arxiv.org/abs/2406.11794) makes this dependence especially visible. Its fastText filter contrasts a positive corpus with broad web data. Changing that positive corpus—from Wikipedia or OpenWebText to OpenHermes plus highly rated ExplainLikeImFive answers—changes what the classifier seeks; the latter produced the strongest filter in its ablation.
 
-**LLM-as-a-Judge pipelines**, including instruction-data selection methods such as [DEITA](https://arxiv.org/abs/2312.15685), translate a model's preferences into an acceptance function. The judge may be excellent, but it is still a reference—not an oracle of context-free data value.
+LLM-based pipelines expose the reference through a rubric. [QuRating](https://arxiv.org/abs/2402.09739), [AlpaGasus](https://arxiv.org/abs/2307.08701), and [DEITA](https://arxiv.org/abs/2312.15685) turn different prompts, judges, and criteria into different accepted distributions.
 
-These methods can be reinterpreted as **implicitly target-driven**. Their “quality” signals are useful when the embedded reference points toward capabilities we care about. Their failures are also easier to understand in this language: if the reference is narrow, stale, stylistically biased, or simply misaligned with the downstream goal, a very accurate filter may efficiently move the data in the wrong direction.
+This gives us two concrete questions for any filter:
 
-This is a reinterpretation, not a claim that every reported gain has one proven causal explanation. But it forces a productive question:
+1. **What reference determines its acceptance rule?**
+2. **Does moving the pool toward that reference improve the target we care about?**
 
-> What distribution does this filter create, and which target would prefer that distribution?
+The first identifies the direction of the shift; the second asks whether that direction is useful. Calling both “quality” obscures the distinction.
 
-## Diversity is a guardrail, not a compass
+## A preference over data is not yet an objective for the model
 
-If quality moves probability mass, diversity tries to stop that mass from collapsing onto a few easy-to-recognize modes.
+A quality score tells us which examples should receive more probability mass. It does not, by itself, specify what shaping the training distribution in that direction should ultimately improve in the resulting model.
 
-This matters. A narrow classifier can produce a dataset that is polished, coherent, and catastrophically incomplete. Rare languages disappear. Unusual formats disappear. Negative examples disappear. Messy reasoning traces disappear. The average quality score rises while the model loses coverage.
+These are different objects. A scorer defines a preference over data; a target objective defines a preference over trained models. The connection between them runs through training—and that connection is exactly what many quality-based accounts leave implicit.
 
-But “maximize diversity” does not solve the missing-target problem. Diversity over topics is not diversity over reasoning skills. Lexical diversity is not tool-use diversity. A million unrelated modes can be impressively diverse and completely irrelevant.
+A Wikipedia-trained language model may prefer fluent encyclopedic text. A classifier trained on a curated positive corpus may prefer data resembling that corpus. An LLM judge may prefer responses that satisfy its rubric. Each supplies a potentially useful direction for moving probability mass. But none of these preferences alone guarantees that the resulting model will improve on the downstream distribution, capability, or evaluation that we actually care about.
 
-There is an even more basic problem: diversity exists only after choosing a representation and a notion of distance.
+> **A quality score says where to move probability mass. A target objective says how to judge the model that arrives after training.**
 
-A geometric coreset may cover an embedding space. Cluster-based selection may sample near each centroid. A determinantal point process may reward pairwise separation. Submodular objectives may encourage diminishing returns. Each is perfectly reasonable—but each preserves a different geometry.
+There is a second omission. Most quality scores rank examples one at a time. If ten thousand nearly identical documents all look excellent to the scorer, all ten thousand may receive high scores. The score expresses a preference, but it does not ask how much of that preference is already represented by the rest of the selected data.
 
-Change the encoder, distance metric, clustering granularity, or feature layer, and the “diverse” subset changes. Sampling one point from every topic cluster may preserve subject coverage while destroying coverage of difficulty. Sampling in gradient space may do the opposite. Even the cluster center is not universally representative: it favors what is typical inside the chosen geometry and may discard the rare boundary cases that matter most to a target.
+## Diversity is the intuitive patch—but diversity in what?
 
-Thus, diversity is not a scalar property of a dataset either. It is shorthand for *coverage under a chosen representation*. The missing question is which distinctions that representation must preserve.
+This is where diversity enters naturally. Quality ranks examples individually; diversity discourages us from selecting many individually attractive but collectively redundant examples.
 
-What we usually need is closer to
+It is an important correction. Aggressive filtering can yield a selected dataset that is polished, coherent, and incomplete. A narrow classifier may *select against* rare languages, unusual formats, negative examples, or messy reasoning traces. It does not generate new samples; it forms the selected subset by assigning those regions lower acceptance probabilities. The average score can rise while useful coverage disappears.
+
+But the patch introduces another choice: diversity is defined only after selecting a representation and a notion of distance.
+
+A [geometric coreset](https://arxiv.org/abs/1708.00489) covers an embedding space; cluster-based selection such as the diversity component in [DEITA](https://arxiv.org/abs/2312.15685) spreads examples across neighborhoods; a [determinantal point process](https://arxiv.org/abs/1207.6083) rewards separation under its kernel. Each preserves a different geometry.
+
+Change the encoder, feature layer, distance, or clustering granularity, and the “diverse” subset changes. Topic embeddings may preserve subject coverage but ignore reasoning difficulty. Gradient representations instead group samples by training effect: topically similar examples can separate when they induce different updates, and different topics can coincide when their updates agree.
+
+In raw token space, a literal support statement is usually too fine-grained to be useful. Let $\phi(x)$ map an example to the features relevant to a task—perhaps language, skill, tool state, trajectory type, or failure mode. The operational coverage condition is better written as
 
 $$
-\operatorname{supp}(p_{\mathrm{target}})
+\operatorname{supp}\!\left(\phi_* p_{\mathrm{target}}\right)
 \subseteq
-\operatorname{supp}(q),
+\operatorname{supp}\!\left(\phi_* q\right),
 $$
 
-where support should be understood at the level that matters: languages, skills, states, trajectories, failure modes, or other task-relevant features.
+Here $\phi_*p$ is the pushforward distribution of task-relevant features under $\phi$. “Support” is not literally a list of skills; the feature map makes explicit which distinctions the coverage claim preserves.
 
-This gives quality and diversity different jobs:
+A benchmark samples only some capabilities and failure modes, so preserving additional coverage hedges against what it failed to specify. But diversity alone cannot decide which region deserves the next billion tokens.
 
-> **A target tells us where probability mass should go.**  
-> **Diversity keeps us from destroying the support we will later need.**
+> **Diversity makes a pointwise preference aware of the selected set. It does not yet make that preference aware of the model the set will produce.**
 
-Diversity is indispensable because our targets and models are imperfectly specified. It protects options. But it cannot tell us which option deserves the next billion tokens.
+Quality and diversity still have useful jobs. But their roles are different: **quality suggests a direction without fully specifying the destination; diversity preserves coverage without deciding where the model should go.** Neither, on its own, states how the shaped distribution should be judged through the model it produces.
 
-## The same sample can change value without changing at all
+## From scoring samples to optimizing a training distribution
 
-Here is a useful sanity check for any intrinsic notion of data quality.
+Influence and validation-gradient methods move closer to the real question by introducing a target and a model state. But when their values are computed once and then used as fixed per-example scores, they remain local approximations. After the selected distribution changes, the model and its gradients change too; the original scores become stale. Joint interactions among the selected examples are represented only through the state at which the scores were measured.
 
-Take one sample $x$. Do not edit it. Now change only the target:
+One could repeatedly update the model, recompute the scores, and select again. But at that point, the procedure is better understood as an approximation to a larger optimization problem—not as the discovery of a permanent utility attached to each sample.
 
-- from casual conversation to theorem proving;
-- from English knowledge to multilingual customer support;
-- from single-turn answers to long-horizon tool use.
-
-Its value can change dramatically.
-
-Now hold the target fixed and change the rest of the training pool. If the pool already contains a million near-duplicates of $x$, its marginal value falls. If $x$ is the only example covering an important failure mode, its value rises.
-
-Nothing intrinsic to $x$ changed. What changed was its role in a system.
-
-This is why per-sample scoring is such a lossy abstraction. A scalar score tries to compress at least four dependencies:
-
-1. the target we want the model to serve;
-2. the other data the model will see;
-3. the training process that converts data into parameters;
-4. the budget that limits how much exposure can be allocated.
-
-Scores are often necessary engineering interfaces. We should simply remember what they approximate.
-
-## From judging samples to designing distributions
-
-The conceptual shift I find useful is small in wording but large in consequence:
-
-> Do not ask whether a sample is good in isolation. Ask how changing its training probability changes the model obtained for a target.
-
-In abstract form:
+The cleaner object is the training distribution itself:
 
 $$
-\min_{q\in\mathcal Q}
-\mathcal L_{\mathrm{target}}\!\left(\theta^*(q)\right)
-\quad\text{s.t.}\quad
-\theta^*(q)
-\in
-\arg\min_\theta
-\mathbb E_{x\sim q}[\ell(x;\theta)].
+q^*
+=
+\arg\min_{q\in\mathcal Q}
+\mathcal L_{\mathrm{target}}\!\left(\theta^*(q)\right),
+\qquad
+\theta^*(q)=\operatorname{Train}(q).
 $$
 
-The inner problem is ordinary model training. The outer problem chooses a feasible training distribution $q$ according to target performance.
+Here, $q$ describes the whole training distribution, $\theta^*(q)$ is the model produced by training on it, and $\mathcal L_{\mathrm{target}}$ says how models are compared. The outer optimization does not assign every example a context-free score and then patch redundancy afterward. It searches for weights jointly, through the model those weights produce.
 
-This view makes three things explicit:
+If two groups of examples supply the same useful training effect, allocating more probability to either eventually offers less benefit than spending that mass elsewhere. What converges is not a universal data-utility score, but an allocation: a distribution whose components have been valued in the presence of one another.
 
-- **Target:** what behavior are we actually trying to improve?
-- **Feasible data operations:** can we only rebalance domains, select existing samples, or generate new ones?
-- **Budget:** how much data and compute can we spend?
+Bilevel optimization did not invent target-aware data selection. Its value here is more basic: it provides a **common language for stating data problems**. Quality scores, diversity terms, influence estimates, and gradient similarity can all be understood as constraints, proxies, or approximations around this distribution-level objective.
 
-It also separates the objective from its proxies. Quality scores, diversity constraints, deduplication rules, and safety filters may all be useful parts of $\mathcal Q$. None automatically replaces $\mathcal L_{\mathrm{target}}$.
+The computational objection is real. Exact bilevel optimization may require differentiating through training or solving inverse-Hessian systems. In [BLADE](https://arxiv.org/abs/2606.18650), we use a Hessian-free penalized objective to recover a scalable excess-loss-style selection rule with a synchronized reference model. The objective is classical; the contribution is bridging it to a procedure that can be deployed at LLM scale.
 
-## Why this is more than a philosophical complaint
+## Put the operator and budget inside the problem
 
-“Good data depends on the task” can sound almost tautological. The useful part is what follows operationally.
+The compact formulation above still hides two practical constraints: which data transformations are allowed, and how much data or compute is available.
+
+Let $O$ denote an operator, $B$ a budget, and $\mathcal Q_O(B;p_{\mathrm{pool}})$ the set of training distributions reachable from the original pool using that operator under that budget. Then the outer problem is
+
+$$
+\min_{q\in\mathcal Q_O(B;p_{\mathrm{pool}})}
+\mathcal L_{\mathrm{target}}\!\left(\theta_B^*(q)\right).
+$$
+
+Now the missing pieces are visible:
+
+- **Mixture:** $O$ can redistribute probability mass among existing domains.
+- **Selection:** $O$ can retain, discard, or change the sampling probabilities of examples already in the candidate pool.
+- **Synthesis:** $O$ can create samples and therefore enlarge the reachable support.
+- **Budget:** $B$ constrains retained tokens, generated samples, training steps, or total compute; it restricts both $\mathcal Q_O$ and the inner training solution $\theta_B^*$.
+
+Quality, diversity, deduplication, and safety can constrain $\mathcal Q_O$ or proxy the outer objective. They do not specify $\mathcal L_{\mathrm{target}}$: the behavior by which the trained model is ultimately judged.
+
+{% include figure.liquid loading="lazy" path="assets/img/blog/data-curation/target-driven-data-pipeline.svg" class="img-fluid rounded z-depth-1" zoomable=true alt="Designing What Models Learn: a target guides data intervention over a raw pool; the operator and budget define a reachable distribution, which is trained and evaluated on the target." %}
+
+*The formulation separates four things that quality and diversity often blur together: the target, the reachable training distributions, the training process, and evaluation of the resulting model.*
+
+Selection cannot recover a target feature absent from the candidate pool. If it is unreachable under $\mathcal Q_{\mathrm{select}}$, the remedy is retrieval, collection, or synthesis—not a cleverer ranking score.
+
+## An operational change in workflow
+
+“Good data depends on the task” is nearly tautological. The useful part is what it changes in practice.
 
 ### 1. Every scorer should declare its reference
 
-Instead of reporting only how a quality model is trained, ask what implicit target it induces. What does a high score move the pool toward? Which useful modes receive low scores?
+What positive corpus, rubric, model, validation set, or representation gives the score its direction? Which useful modes does that reference systematically underrate?
 
-### 2. Diversity should be measured in target-relevant coordinates
+### 2. Diversity should name its geometry
 
-Topic clusters may be appropriate for web pretraining. They may be inadequate for agent trajectories, where coverage of states, tools, recovery behaviors, and outcome types matters more.
+Topic diversity, lexical diversity, embedding coverage, and gradient diversity are not interchangeable. A diversity claim should state which representation is being covered and why that representation preserves distinctions needed by the target.
 
-### 3. Data methods should be evaluated across targets
+### 3. Test the direction, then choose the operator
 
-A universal quality claim is strong. If a filter improves one reference-aligned benchmark and harms another, that is not an annoying edge case; it reveals the direction encoded by the method.
+Evaluate filters across targets: gains on one reference-aligned benchmark and losses on another reveal the direction they encode. Then choose an operator capable of the required change. Mixture changes domain mass, selection works within a pool, and synthesis adds missing support.
 
-### 4. Selection should not be asked to invent missing support
+### 4. Evaluate the trained model, not only the selected dataset
 
-If the target requires a mode absent from the candidate pool, no ranking rule can select it. The correct operation is synthesis, retrieval, or new data collection—not a more sophisticated score.
-
-### 5. Improvement should be separated into acceleration and advancement
-
-Even a target-aligned distribution may only improve learning speed when the baseline already has the right endpoint. In the [previous essay]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}), I discuss how a correctable train–target gap determines whether curation has room to create lasting advancement.
+Cleaner documents, higher judge scores, or broader embedding coverage are intermediate properties. The outer question is whether the resulting model improves on the declared target—and, as discussed in the [previous essay]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}), whether that improvement is advancement or only acceleration.
 
 ## What, then, is good data?
 
-I would resist replacing “quality and diversity” with another two-word slogan. The whole point is that data value lives in a relationship.
+I would not replace “quality and diversity” with another two-word slogan. Data value lives in a relationship.
 
 A more complete question is:
 
-> Under a target, a candidate pool, a training procedure, and a compute budget, which feasible change to the training distribution produces the model we prefer?
+> Under a target, a candidate pool, an allowed data operator, a training procedure, and a budget, which feasible change to the training distribution produces the model we prefer?
 
-That question is harder than assigning a cleanliness score. It is also much closer to the decision we are actually making.
+Quality can provide useful reference signals. Diversity can protect coverage. Influence and gradient methods can approximate local changes. But the object being engineered is the distribution presented to learning, and its value is measured through the model that distribution produces for a target.
 
-Quality still matters. Diversity still matters. But quality usually encodes a reference, and diversity protects a support. The object being engineered is the distribution presented to learning.
-
-The [next essay]({{ '/blog/2026/from-target-to-operator/' | relative_url }}) turns this viewpoint into a technical map: mixture, selection, and synthesis as three operators over the same bilevel problem—and what changes when the data itself is generated by a policy.
+The [next essay]({{ '/blog/2026/from-target-to-operator/' | relative_url }}) develops the operator side of this picture: mixture, selection, and synthesis as different feasible sets around the same target-driven objective—and what changes when the data itself is generated by a policy.
