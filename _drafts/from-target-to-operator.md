@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "From Target to Operator: Mixture, Selection, Synthesis, and RL Data"
+title: "From Target to Operator: Mixture, Selection, and Synthesis"
 date: 2026-10-13 10:00:00 +0800
 description: "A bilevel view of data engineering: targets define the objective, operators define what distributions are reachable, and gaps determine whether optimization can help."
-tags: llm data-curation bilevel-optimization data-selection data-synthesis reinforcement-learning
+tags: llm data-curation bilevel-optimization data-selection data-synthesis
 categories: research
 thumbnail: assets/img/blog/data-curation/blade-procedure.png
 series: designing-what-models-learn
@@ -59,7 +59,7 @@ The interesting object is the feasible set $\mathcal Q$. It records what the pip
 | --- | --- | --- | --- |
 | Mixture | Domain weights | Exposure across predefined groups | Distinguish samples inside a group |
 | Selection | Sample/token weights or masks | Fine-grained exposure within a pool | Create a missing mode |
-| Synthesis | Generator, prompt, task, or rollout policy | Exposure and accessible support | Guarantee correctness of new data |
+| Synthesis | Generator, prompt, or task specification | Exposure and accessible support | Guarantee correctness of new data |
 
 Mixture and selection reallocate probability mass. Synthesis can enlarge the space over which that mass is allocated.
 
@@ -70,10 +70,10 @@ That difference sounds obvious. It has surprisingly strong consequences.
 For mixture and selection, the induced distribution can be written abstractly as
 
 $$
-q(x)=\frac{r(x)p_{\mathrm{pool}}(x)}{Z},
+q(x)=\frac{w(x)p_{\mathrm{pool}}(x)}{Z},
 $$
 
-where $r(x)$ is a domain weight, sample weight, or binary mask. Therefore,
+where $w(x)$ is a domain weight, sample weight, or binary mask. Therefore,
 
 $$
 \operatorname{supp}(q)
@@ -83,7 +83,7 @@ $$
 
 No amount of clever reweighting can select an example that does not exist.
 
-If the target skill is present but rare, mixture or selection can expose it more often. If the target requires a tool trajectory, language, failure-recovery pattern, or reasoning strategy absent from the pool, selection has reached its boundary. At that point, repeatedly improving the ranker is like reorganizing a library in search of a book nobody bought.
+If the target skill is present but rare, mixture or selection can expose it more often. If the target requires a tool-use example, language, failure-recovery pattern, or reasoning strategy absent from the pool, selection has reached its boundary. At that point, repeatedly improving the ranker is like reorganizing a library in search of a book nobody bought.
 
 This gives a basic operator-selection rule:
 
@@ -109,16 +109,16 @@ This order is easy to invert. It is tempting to build a sophisticated data score
 
 ## TANDEM: change mass at the domain level
 
-In data-mixture optimization, the decision is a vector $\alpha$ over $K$ domains:
+In data-mixture optimization, the decision is a weight vector $w$ over $K$ domains:
 
 $$
-\min_{\alpha\in\Delta^K}
-\mathcal L_{\mathrm{target}}\!\left(\theta^*(\alpha)\right),
+\min_{w\in\Delta^K}
+\mathcal L_{\mathrm{target}}\!\left(\theta^*(w)\right),
 \qquad
-\theta^*(\alpha)
+\theta^*(w)
 \in
 \arg\min_\theta
-\mathcal L_{\mathrm{train}}(\theta;\alpha).
+\mathcal L_{\mathrm{train}}(\theta;w).
 $$
 
 The obvious implementation—train a fresh model for every candidate mixture—is hopelessly expensive. [TANDEM](https://openreview.net/forum?id=szBFUtBzWP) uses a penalty reformulation and two coupled networks instead:
@@ -138,27 +138,27 @@ An unexpected lesson from this work was that uniform allocation can be annoyingl
 
 Domain weights are coarse. A domain can contain both valuable and useless examples; an example can contain both valuable and useless tokens.
 
-[BLADE](https://arxiv.org/abs/2606.18650) pushes the same outer objective to token granularity. Let $\alpha_n\in[0,1]$ indicate whether token $n$ contributes to training, under a fixed keep ratio $\gamma$:
+[BLADE](https://arxiv.org/abs/2606.18650) pushes the same outer objective to token granularity. Let $w_n\in[0,1]$ indicate whether token $n$ contributes to training, under a fixed keep ratio $\gamma$, and define $\mathcal W_\gamma=\{w\in[0,1]^N:\sum_n w_n=\gamma N\}$:
 
 $$
-\min_{\alpha\in\mathcal A}
-\mathcal L_{\mathrm{val}}\!\left(w(\alpha)\right)
+\min_{w\in\mathcal W_\gamma}
+\mathcal L_{\mathrm{val}}\!\left(\theta^*(w)\right)
 \quad\text{s.t.}\quad
-w(\alpha)
+\theta^*(w)
 \in
-\arg\min_w
+\arg\min_\theta
 \frac{1}{\gamma N}
-\sum_{n=1}^N \alpha_n\mathcal L^n_{\mathrm{train}}(w).
+\sum_{n=1}^N w_n\mathcal L^n_{\mathrm{train}}(\theta).
 $$
 
-Exact bilevel hypergradients require inverse-Hessian information—an unattractive phrase even before “at LLM scale” is added. BLADE uses a Hessian-free penalty reformulation. A training proxy $u$ and a target-informed reference $w$ produce the token score
+Exact bilevel hypergradients require inverse-Hessian information—an unattractive phrase even before “at LLM scale” is added. BLADE uses a Hessian-free penalty reformulation. A training proxy $\theta_{\mathrm{proxy}}$ and a target-informed reference $\theta_{\mathrm{ref}}$ produce the token score
 
 $$
 s_n
 =
-\mathcal L^n_{\mathrm{train}}(u)
+\mathcal L^n_{\mathrm{train}}(\theta_{\mathrm{proxy}})
 -
-\mathcal L^n_{\mathrm{train}}(w).
+\mathcal L^n_{\mathrm{train}}(\theta_{\mathrm{ref}}).
 $$
 
 A Frank–Wolfe step over the budget constraint gives a binary Top-$\gamma N$ mask. Applied within candidate batches, the procedure performs online token selection without scoring and storing the entire corpus in advance.
@@ -169,6 +169,8 @@ A Frank–Wolfe step over the budget constraint gives a binary Top-$\gamma N$ ma
 
 TANDEM and BLADE differ in granularity and numerical method. Their question is the same: which feasible redistribution of training exposure produces a model that performs better on the target?
 
+This question echoes the counterfactual behind [influence functions](https://proceedings.mlr.press/v70/koh17a.html): how would a target prediction or loss change if a training point received slightly more or less weight? Classical influence estimates answer it by differentiating through the fitted model, which introduces inverse-Hessian computation and is difficult to use as an online data operator at LLM scale. TANDEM and BLADE retain the target-aware bilevel question but take a different computational route: they penalize the inner optimality condition and use coupled proxy and target-informed reference models to update $w$. They are not scaled-up classical influence estimators; they are first-order solvers for the same broader problem of valuing data through its effect on a target.
+
 ## Synthesis: enlarge the feasible distribution
 
 Selection assumes the missing value is hiding somewhere in the pool. Synthesis removes that assumption.
@@ -176,13 +178,13 @@ Selection assumes the missing value is hiding somewhere in the pool. Synthesis r
 Let a generator $G_\phi$ produce candidates from prompts, specifications, environments, or observed failures. The outer problem now controls both generation and curation:
 
 $$
-\min_{\phi,\alpha}
-\mathcal L_{\mathrm{target}}\!\left(\theta^*(\phi,\alpha)\right)
+\min_{\phi,w}
+\mathcal L_{\mathrm{target}}\!\left(\theta^*(\phi,w)\right)
 \quad\text{s.t.}\quad
-\theta^*(\phi,\alpha)
+\theta^*(\phi,w)
 \in
 \arg\min_\theta
-\mathbb E_{x\sim q_{\phi,\alpha}}[\ell(x;\theta)].
+\mathbb E_{x\sim q_{\phi,w}}[\ell(x;\theta)].
 $$
 
 The formulation changes the synthesis question. Instead of asking “Can the generator produce plausible data?”, ask:
@@ -207,36 +209,17 @@ $$
 
 This is more demanding than bulk self-instruction. It treats generation as an intervention on the support, followed by an empirical test of whether that intervention closes the gap.
 
-## The data unit is becoming a trajectory
-
-Documents and instruction–response pairs are convenient, mostly static units. Reasoning models and agents create a messier object: a trajectory.
-
-A useful trajectory may include a task specification, hidden environment state, intermediate reasoning, tool calls, tool responses, recovery from errors, and a delayed outcome. “Quality” is no longer captured by fluency or even final-answer correctness. The path matters.
-
-Reinforcement learning also makes the data endogenous. The policy generates rollouts; verifiers and rewards evaluate them; selection, replay, and importance weighting determine which parts affect the next update; the new policy then changes the next round of data.
-
-There are at least two distributional questions:
-
-1. Does the generated experience cover the downstream target capability?
-2. Can experience from an older behavior policy be used reliably to update the current policy?
-
-Our work on [Selective Importance Sampling (SIS)](https://arxiv.org/abs/2607.04728) addresses the second. Standard importance sampling reweights off-policy data with ratios between the current and behavior policies, but sequence-level products become unstable over long horizons. SIS uses a token-level acceptance–rejection test. Accepted tokens are converted to on-policy samples with unit weight; rejected tokens are retained with the usual importance correction.
-
-SIS is therefore not ordinary data selection: rejection does not mean deletion. I find it more useful to view SIS as a **stochastic distribution-conversion operator** between rollout and policy update.
-
-This expands the data-engineering map. An RL pipeline does not merely choose a static dataset. It designs how experience is generated, verified, accepted, reweighted, reused, and regenerated.
-
 ## A research program hiding inside a data pipeline
 
 The unified view does not imply that one algorithm should solve everything. Quite the opposite: once the target and feasible set are explicit, different technical questions become easier to separate.
 
 - **Diagnosis:** Is the observed gap large enough to justify intervention?
 - **Attribution:** Which missing or overrepresented modes create it?
-- **Operation:** Should we rebalance, select, synthesize, or convert experience?
+- **Operation:** Should we rebalance, select, or synthesize?
 - **Optimization:** How can the outer decision be approximated without retraining a model for every candidate?
 - **Verification:** Did the gain persist with budget, and did another target regress?
 
-For simple corpora, the operator may be a vector of domain weights. For web-scale filtering, it may be a token mask. For agents, it may be a task generator plus a trajectory verifier plus a replay rule. The mathematical skeleton can remain the same while the unit of intervention becomes richer.
+For simple corpora, the operator may be a vector of domain weights. For web-scale filtering, it may be a token mask. For synthetic-data pipelines, it may be a generator followed by a verifier. The mathematical skeleton can remain the same while the unit of intervention becomes richer.
 
 ## The map I use
 

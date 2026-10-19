@@ -20,3 +20,5 @@ services:
       - .:/srv/jekyll
     environment:
       - JEKYLL_ENV=development
+      # Local preview only: include _drafts plus posts marked unpublished/future.
+      - JEKYLL_PREVIEW_DRAFTS=true

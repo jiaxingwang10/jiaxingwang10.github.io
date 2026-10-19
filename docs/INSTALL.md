@@ -84,6 +84,10 @@ docker compose up
 
 Note that when you run it for the first time, it will download a docker image of size 400MB or so. To see the template running, open your browser and go to `http://localhost:8080`. You should see a copy of the theme's demo website.
 
+The default Docker development preview also includes posts in `_drafts`, posts with
+`published: false`, and future-dated posts. This is local-only behavior controlled by
+`JEKYLL_PREVIEW_DRAFTS=true` in `docker-compose.yml`; production builds remain unchanged.
+
 Now, feel free to customize the theme however you like (don't forget to change the name!). Also, your changes should be automatically rendered in real-time (or maybe after a few seconds).
 
 For v1.x, Docker serves from a container-local destination (`/tmp/_site`) to avoid host bind-mount write deadlocks during notebook and asset generation.
