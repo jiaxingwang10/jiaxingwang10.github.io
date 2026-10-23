@@ -1,0 +1,107 @@
+{% assign series_posts = site.posts | where: 'series', page.series | sort: 'series_order' %}
+{% assign previous_order = page.series_order | minus: 1 %}
+{% assign next_order = page.series_order | plus: 1 %}
+{% assign previous_essay = series_posts | where: 'series_order', previous_order | first %}
+{% assign next_essay = series_posts | where: 'series_order', next_order | first %}
+
+<footer class="essay-footer">
+  <section class="essay-citation" aria-label="Cite this essay">
+    <p class="essay-citation__label">Cite this essay</p>
+    <pre class="essay-citation__paper"><code>@misc{ {{- include.citation_key -}},
+  title  = { {{- page.title | escape -}} },
+  author = {Wang, Jiaxing},
+  year   = { {{- page.date | date: '%Y' -}} },
+  url    = {https://jiaxingwang10.github.io{{ page.url }}},
+  note   = { {{- page.series_title | escape -}}, Part {{ page.series_order }}}
+}</code></pre>
+  </section>
+
+  <nav class="essay-navigation" aria-label="Series reading navigation">
+    {% if previous_essay %}
+      <a class="essay-navigation__item essay-navigation__item--previous" href="{{ previous_essay.url | relative_url }}" rel="prev">
+        <span class="essay-navigation__label">← Previous read · Part {{ previous_essay.series_order }}</span>
+        <span class="essay-navigation__title">{{ previous_essay.title | escape }}</span>
+      </a>
+    {% endif %}
+    {% if next_essay %}
+      <a class="essay-navigation__item essay-navigation__item--next" href="{{ next_essay.url | relative_url }}" rel="next">
+        <span class="essay-navigation__label">Next read · Part {{ next_essay.series_order }} →</span>
+        <span class="essay-navigation__title">{{ next_essay.title | escape }}</span>
+      </a>
+    {% endif %}
+  </nav>
+</footer>
+
+<style>
+  .essay-footer {
+    margin-top: 3rem;
+  }
+  .essay-citation__label {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  .essay-citation__paper {
+    padding: clamp(1rem, 3vw, 1.75rem);
+    border: 1px solid #e3dfd5;
+    border-radius: 0;
+    background: #faf9f6;
+    color: #33312e;
+    box-shadow: 0 2px 4px rgba(51, 49, 46, 0.025);
+    font-size: 0.85rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .essay-citation__paper code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+  }
+  .essay-navigation {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--global-divider-color);
+  }
+  .essay-navigation__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--global-text-color);
+    text-decoration: none;
+  }
+  .essay-navigation__item--next {
+    grid-column: 2;
+    text-align: right;
+  }
+  .essay-navigation__label {
+    color: var(--global-text-color-light);
+    font-size: 0.8rem;
+  }
+  .essay-navigation__title {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .essay-navigation__item:hover,
+  .essay-navigation__item:focus-visible {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+  html[data-theme='dark'] .essay-citation__paper {
+    border-color: #48443c;
+    background: #292824;
+    color: #e6e2d9;
+  }
+  @media (max-width: 575px) {
+    .essay-navigation {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .essay-navigation__item--next {
+      grid-column: 1;
+      text-align: left;
+    }
+  }
+</style>

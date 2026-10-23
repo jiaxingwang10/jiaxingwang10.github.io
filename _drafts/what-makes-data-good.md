@@ -5,7 +5,6 @@ date: 2026-10-13 11:00:00 +0800
 description: "Quality and diversity are useful words, but incomplete objectives. A target-relative view changes what we score, select, and synthesize."
 tags: llm data-curation data-quality diversity distribution-design
 categories: research
-thumbnail: assets/img/blog/data-curation/target-driven-data-pipeline.svg
 series: designing-what-models-learn
 series_title: "Designing What Models Learn"
 series_order: 2
@@ -115,20 +114,24 @@ $$
 
 The inner problem maps a training distribution $q$ to a trained model $\theta^*(q)$. The outer problem compares candidate distributions by evaluating those models on the downstream target. The decision variable is the distribution as a whole, not a collection of permanent sample scores.
 
-This makes the missing interaction explicit. The value of assigning more probability to one region depends on what else has already been selected and on how the learner responds to the resulting allocation. Quality scores and separately added diversity terms leave that dependence implicit; the bilevel objective judges them together through the model they produce.
-
-This is a formulation, not yet a practical solver. It states what data optimization is trying to achieve; the available operators and computational approximations determine which parts of that objective can actually be optimized.
+This makes the missing interaction explicit. The value of assigning more probability to one region depends on what else has already been selected and on how the learner responds to the resulting allocation. A pointwise quality score ignores this interaction. A diversity term can partially account for redundancy, but only under the geometry induced by the chosen representation. The bilevel objective instead evaluates the allocation as a whole through the model it produces.
 
 ## Reachability still matters
 
-Even a well-specified target does not give us arbitrary control. Selection can only reweight or remove examples already in a candidate pool. If a needed capability is absent, the remedy is retrieval, collection, or synthesis—not a better ranking score.
+The bilevel objective tells us how to compare training distributions, but not which distributions are reachable. Selection can only reweight or remove examples already in a candidate pool. If a needed capability is absent, the remedy is retrieval, collection, or synthesis—not a better ranking score.
 
-More generally, the feasible set $\mathcal Q$ is defined by the data operator and its budget. Mixture redistributes mass across predefined groups, selection acts within an existing pool, and synthesis can expand its support. Once the target is stated, two questions remain: what search space does the operator make reachable, and what algorithm can optimize over it? The [next essay]({{ '/blog/2026/from-target-to-operator/' | relative_url }}) develops this operator-and-solver side of the problem.
+More generally, the feasible set $\mathcal Q$ is defined by the data operator and its budget. Mixture redistributes mass across predefined groups, selection acts within an existing pool, and synthesis can expand its support. The target determines how reachable distributions are evaluated; the operator and budget determine which distributions can be considered at all. The [next essay]({{ '/blog/2026/from-target-to-operator/' | relative_url }}) shows how mixture, selection, and synthesis instantiate different feasible sets within the same bilevel formulation—and how the resulting optimization problems can be approached.
 
 ## What, then, is good data?
 
-I would not replace “quality and diversity” with another slogan. A more useful question is:
+Some decisions remain straightforward: remove invalid files, exact duplicates, or verified label errors. Beyond such hygiene, however, “good” is not a property of an example in isolation. It describes the role that example plays alongside the rest of the training distribution for a target.
 
-> Under a target, a candidate pool, an allowed data operator, a training procedure, and a budget, which feasible change to the training distribution produces the model we prefer?
+I would not replace “quality and diversity” with another slogan. The more useful question is:
 
-Basic checks can still remove invalid files, exact duplicates, or verified label errors. Quality scores can supply useful signals, and diversity can protect coverage. The mistake is to treat any of them as a target-independent measure of training value.
+> Given a target, a training procedure, a budget, and a feasible family of training distributions $\mathcal Q$, which $q\in\mathcal Q$ produces the model we prefer?
+
+Quality scores can supply useful signals, and diversity can protect coverage. But they are proxies or constraints within this decision, not target-independent definitions of training value.
+
+Good data, then, is not a universal subset waiting to be discovered. It is a training distribution to be designed for a target.
+
+{% include essay-footer.liquid citation_key='wang2026gooddata' %}

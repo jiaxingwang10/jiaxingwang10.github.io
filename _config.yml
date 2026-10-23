@@ -318,8 +318,8 @@ jekyll-archives:
   books:
     enabled: [year, tags, categories] # enables year, tag and category archives (remove if you need to disable one of them).
 
-display_tags: ["data-curation", "data-mixture", "data-selection", "data-synthesis", "bilevel-optimization", "llm"]
-display_categories: ["research"]
+display_tags: []
+display_categories: []
 
 # -----------------------------------------------------------------------------
 # Jekyll Scholar

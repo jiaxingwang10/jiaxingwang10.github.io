@@ -97,7 +97,9 @@ latest_posts:
 </div>
 I am currently a researcher at JD.com. I obtained my Ph.D. degree from [National Laboratory of Pattern Recognition](https://nlpr.ia.ac.cn/) from [CASIA](https://ia.cas.cn), supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
 
-My research focuses on Data-centric AI and AI Infrastructure, with a specific emphasis on data mixture optimization, data selection, and data synthesis to construct a self-evolving data flywheel, as well as efficient model training and inference. These techniques have been successfully deployed in production within JD Retail's commodity understanding, yielding substantial business impact.
+My research focuses on how training data shapes what models learn, and how to make learning more efficient. I study data mixture optimization, selection, and synthesis, with an emphasis on connecting target-driven objectives to practical training algorithms. This work provides a foundation for self-evolving AI systems, where feedback from model failures guides iterative improvements to training data and model capabilities.
+
+At JD Retail, I have deployed a data flywheel for product understanding that connects target evaluation, data generation and selection, and model training. My work also includes systems for efficient training and inference.
 
 <h2>
   <a href="{{ '/news/' | relative_url }}" style="color: inherit">news</a>

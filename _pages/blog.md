@@ -38,19 +38,19 @@ pagination:
       <p>Essays on targets, training distributions, and data operators.</p>
     </div>
 
-    <div class="blog-series__grid">
+    <div class="blog-series__list">
       {% for post in designing_series %}
         <article class="blog-series__card">
           <a href="{{ post.url | relative_url }}" aria-label="Read Part {{ post.series_order }}: {{ post.title }}">
-            {% if post.thumbnail %}
-              <div class="blog-series__image-wrap">
-                <img src="{{ post.thumbnail | relative_url }}" alt="" loading="{% if post.series_order == 1 %}eager{% else %}lazy{% endif %}">
-              </div>
-            {% endif %}
             <div class="blog-series__body">
               <p class="blog-series__part">Part {{ post.series_order }} of {{ designing_series.size }}</p>
               <h3>{{ post.title }}</h3>
               <p>{{ post.description }}</p>
+              {% assign read_time = post.content | strip_html | number_of_words | divided_by: 180 | plus: 1 %}
+              <p class="blog-series__meta">
+                {{ read_time }} min read &nbsp; &middot; &nbsp;
+                <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%B %d, %Y' }}</time>
+              </p>
               <span class="blog-series__link">Read Part {{ post.series_order }} <span aria-hidden="true">→</span></span>
             </div>
           </a>
@@ -65,9 +65,7 @@ pagination:
       padding: clamp(1.25rem, 3vw, 2rem);
       border: 1px solid var(--global-divider-color);
       border-radius: 1rem;
-      background:
-        radial-gradient(circle at top right, rgba(181, 9, 172, 0.10), transparent 36%),
-        var(--global-bg-color);
+      background: var(--global-bg-color);
     }
 
     .blog-series__header {
@@ -98,9 +96,9 @@ pagination:
       font-size: 1.05rem;
     }
 
-    .blog-series__grid {
+    .blog-series__list {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
       gap: 1rem;
     }
 
@@ -126,19 +124,6 @@ pagination:
       text-decoration: none;
     }
 
-    .blog-series__image-wrap {
-      aspect-ratio: 16 / 8.5;
-      overflow: hidden;
-      border-bottom: 1px solid var(--global-divider-color);
-      background: #fbfafc;
-    }
-
-    .blog-series__image-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
     .blog-series__body {
       display: flex;
       flex: 1;
@@ -154,10 +139,17 @@ pagination:
       text-transform: none;
     }
 
-    .blog-series__body > p:not(.blog-series__part) {
+    .blog-series__body > p:not(.blog-series__part):not(.blog-series__meta) {
       margin-bottom: 1rem;
       color: var(--global-text-color-light);
       font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .blog-series__meta {
+      margin: 0 0 0.75rem;
+      color: var(--global-text-color-light);
+      font-size: 0.8rem;
       line-height: 1.5;
     }
 
@@ -168,35 +160,6 @@ pagination:
       font-weight: 600;
     }
 
-    @media (max-width: 900px) {
-      .blog-series__grid {
-        grid-template-columns: 1fr;
-      }
-
-      .blog-series__card > a {
-        display: grid;
-        grid-template-columns: minmax(9rem, 34%) 1fr;
-      }
-
-      .blog-series__image-wrap {
-        height: 100%;
-        min-height: 10rem;
-        border-right: 1px solid var(--global-divider-color);
-        border-bottom: 0;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .blog-series__card > a {
-        display: flex;
-      }
-
-      .blog-series__image-wrap {
-        min-height: 0;
-        border-right: 0;
-        border-bottom: 1px solid var(--global-divider-color);
-      }
-    }
   </style>
 {% endif %}
 
