@@ -18,16 +18,9 @@ pagination:
 
 <div class="post">
 
-{% assign blog_name_size = site.blog_name | size %}
-{% assign blog_description_size = site.blog_description | size %}
-
-{% if blog_name_size > 0 or blog_description_size > 0 %}
-
-  <div class="header-bar">
-    <h1>{{ site.blog_name }}</h1>
-    <h2>{{ site.blog_description }}</h2>
-  </div>
-  {% endif %}
+<header class="blog-index-heading">
+  <h1>{{ site.blog_name | default: 'Research Notes' }}</h1>
+</header>
 
 {% assign designing_series = site.posts | where: "series", "designing-what-models-learn" | sort: "series_order" %}
 {% if designing_series.size > 0 %}
@@ -52,7 +45,6 @@ pagination:
                 {{ read_time }} min read &nbsp; &middot; &nbsp;
                 <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%B %d, %Y' }}</time>
               </p>
-              <span class="blog-series__link">Read Part {{ post.series_order }} <span aria-hidden="true">→</span></span>
             </div>
           </a>
           {% if post.translation_url %}
@@ -66,8 +58,21 @@ pagination:
   </section>
 
   <style>
+    .blog-index-heading {
+      margin: 0 0 1.25rem;
+    }
+
+    .blog-index-heading h1 {
+      margin: 0;
+      color: var(--global-text-color);
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 1.4;
+      text-align: left;
+    }
+
     .blog-series {
-      margin: 2.25rem 0 2.75rem;
+      margin: 0 0 2.75rem;
       padding: clamp(1.25rem, 3vw, 2rem);
       border: 1px solid var(--global-divider-color);
       border-radius: 1rem;
@@ -75,7 +80,6 @@ pagination:
     }
 
     .blog-series__header {
-      max-width: 46rem;
       margin-bottom: 1.5rem;
     }
 
@@ -92,14 +96,16 @@ pagination:
     .blog-series__header h2 {
       margin: 0 0 0.4rem;
       color: var(--global-text-color);
-      font-size: clamp(1.8rem, 4vw, 2.65rem);
-      line-height: 1.1;
+      font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+      font-weight: 500;
+      line-height: 1.3;
+      scroll-margin-top: 6rem;
     }
 
     .blog-series__subtitle {
       margin: 0 0 0.85rem;
       color: var(--global-text-color);
-      font-size: 1rem;
+      font-size: 1.15rem;
       line-height: 1.5;
     }
 
@@ -148,6 +154,7 @@ pagination:
       margin: 0 0 0.65rem;
       color: var(--global-text-color);
       font-size: 1.12rem;
+      font-weight: 400;
       line-height: 1.3;
       text-transform: none;
     }
@@ -160,7 +167,7 @@ pagination:
     }
 
     .blog-series__meta {
-      margin: 0 0 0.75rem;
+      margin: 0;
       color: var(--global-text-color-light);
       font-size: 0.8rem;
       line-height: 1.5;
@@ -171,12 +178,6 @@ pagination:
       font-size: 0.85rem;
     }
 
-    .blog-series__link {
-      margin-top: auto;
-      color: var(--global-theme-color);
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
 
   </style>
 {% endif %}
