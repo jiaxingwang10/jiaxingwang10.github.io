@@ -6,7 +6,7 @@ description: "Quality and diversity are useful words, but incomplete objectives.
 tags: llm data-curation data-quality diversity distribution-design
 categories: research
 series: designing-what-models-learn
-series_title: "Designing What Models Learn"
+series_title: "Designing Training Data for Language Models"
 series_order: 2
 giscus_comments: false
 related_posts: false
@@ -18,8 +18,8 @@ toc:
 
 <p class="lead text-muted">Quality, Diversity, and the Missing Target</p>
 
-> **Designing What Models Learn · Part 2 of 3**<br>
-> *Essays on targets, training distributions, and data operators*<br>
+> **Designing Training Data for Language Models · Part 2 of 3**<br>
+> *When to optimize, what makes data good, and how to change it.*<br>
 > [Advancement vs. Acceleration]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}) · **What Makes Data Good?** · [From Target to Operator]({{ '/blog/2026/from-target-to-operator/' | relative_url }})
 
 Imagine two training examples.

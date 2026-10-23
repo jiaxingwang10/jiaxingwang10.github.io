@@ -3,10 +3,16 @@
 {% assign next_order = page.series_order | plus: 1 %}
 {% assign previous_essay = series_posts | where: 'series_order', previous_order | first %}
 {% assign next_essay = series_posts | where: 'series_order', next_order | first %}
+{% assign citation_label = 'Cite this essay' %}
+{% assign navigation_label = 'Series reading navigation' %}
+{% if page.lang == 'zh-CN' %}
+  {% assign citation_label = '引用本文' %}
+  {% assign navigation_label = '系列文章导航' %}
+{% endif %}
 
 <footer class="essay-footer">
-  <section class="essay-citation" aria-label="Cite this essay">
-    <p class="essay-citation__label">Cite this essay</p>
+  <section class="essay-citation" aria-label="{{ citation_label }}">
+    <p class="essay-citation__label">{{ citation_label }}</p>
     <pre class="essay-citation__paper"><code>@misc{ {{- include.citation_key -}},
   title  = { {{- page.title | escape -}} },
   author = {Wang, Jiaxing},
@@ -16,16 +22,16 @@
 }</code></pre>
   </section>
 
-  <nav class="essay-navigation" aria-label="Series reading navigation">
+  <nav class="essay-navigation" aria-label="{{ navigation_label }}">
     {% if previous_essay %}
       <a class="essay-navigation__item essay-navigation__item--previous" href="{{ previous_essay.url | relative_url }}" rel="prev">
-        <span class="essay-navigation__label">← Previous read · Part {{ previous_essay.series_order }}</span>
+        <span class="essay-navigation__label">{% if page.lang == 'zh-CN' %}← 上一篇（英文） · 第 {{ previous_essay.series_order }} 篇{% else %}← Previous read · Part {{ previous_essay.series_order }}{% endif %}</span>
         <span class="essay-navigation__title">{{ previous_essay.title | escape }}</span>
       </a>
     {% endif %}
     {% if next_essay %}
       <a class="essay-navigation__item essay-navigation__item--next" href="{{ next_essay.url | relative_url }}" rel="next">
-        <span class="essay-navigation__label">Next read · Part {{ next_essay.series_order }} →</span>
+        <span class="essay-navigation__label">{% if page.lang == 'zh-CN' %}下一篇（英文） · 第 {{ next_essay.series_order }} 篇 →{% else %}Next read · Part {{ next_essay.series_order }} →{% endif %}</span>
         <span class="essay-navigation__title">{{ next_essay.title | escape }}</span>
       </a>
     {% endif %}

@@ -129,7 +129,7 @@ My research focuses on how training data shapes what models learn, and how to ma
 
 At JD Retail, I have deployed a data flywheel for product understanding that connects target evaluation, data generation and selection, and model training. My work also includes systems for efficient training and inference.
 
-<p class="profile-blog-link">For an overview of my recent work, see <a href="{{ '/blog/#designing-series-title' | relative_url }}">Designing What Models Learn</a>, a three-part essay series on training data and learning.</p>
+<p class="profile-blog-link">For an overview of my recent work, see <a href="{{ '/blog/#designing-series-title' | relative_url }}">Designing Training Data for Language Models</a>, a three-part essay series on training data and learning.</p>
 
 <h2>
   <a href="{{ '/news/' | relative_url }}" style="color: inherit">News</a>

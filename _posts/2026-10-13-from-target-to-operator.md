@@ -6,7 +6,7 @@ description: "How mixture and selection turn a shared bilevel objective into pra
 tags: llm data-curation bilevel-optimization data-selection data-synthesis
 categories: research
 series: designing-what-models-learn
-series_title: "Designing What Models Learn"
+series_title: "Designing Training Data for Language Models"
 series_order: 3
 giscus_comments: false
 related_posts: false
@@ -16,8 +16,8 @@ toc:
 
 <!-- Notation: q=training distribution, theta=model, w=mixture/selection allocation, psi=generation parameters, K=domains, P=candidate units, f=keep ratio. -->
 
-> **Designing What Models Learn · Part 3 of 3**<br>
-> *Essays on targets, training distributions, and data 好的operators*<br>
+> **Designing Training Data for Language Models · Part 3 of 3**<br>
+> *When to optimize, what makes data good, and how to change it.*<br>
 > [Advancement vs. Acceleration]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}) · [What Makes Data Good?]({{ '/blog/2026/what-makes-data-good/' | relative_url }}) · **From Target to Operator**
 
 Suppose we want a language model to perform better on a target—a domain, a task, or a set of capabilities—and can change the data it trains on. Which changes should we make?

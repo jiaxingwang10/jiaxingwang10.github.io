@@ -34,7 +34,8 @@ pagination:
   <section class="blog-series" aria-labelledby="designing-series-title">
     <div class="blog-series__header">
       <p class="blog-series__eyebrow">A THREE-PART SERIES</p>
-      <h2 id="designing-series-title">Designing What Models Learn</h2>
+      <h2 id="designing-series-title">Designing Training Data for Language Models</h2>
+      <p class="blog-series__subtitle">When to optimize, what makes data good, and how to change it.</p>
       <p>Over the past few years, I’ve been studying how training-data distributions shape what language models learn. This series brings together observations, connections, and open questions from our work. I’ll update the essays as new experiments, papers, and code become available.</p>
     </div>
 
@@ -54,6 +55,11 @@ pagination:
               <span class="blog-series__link">Read Part {{ post.series_order }} <span aria-hidden="true">→</span></span>
             </div>
           </a>
+          {% if post.translation_url %}
+            <div class="blog-series__languages">
+              <a href="{{ post.translation_url | relative_url }}" lang="zh-CN" hreflang="zh-CN">中文版 →</a>
+            </div>
+          {% endif %}
         </article>
       {% endfor %}
     </div>
@@ -88,6 +94,13 @@ pagination:
       color: var(--global-text-color);
       font-size: clamp(1.8rem, 4vw, 2.65rem);
       line-height: 1.1;
+    }
+
+    .blog-series__subtitle {
+      margin: 0 0 0.85rem;
+      color: var(--global-text-color);
+      font-size: 1rem;
+      line-height: 1.5;
     }
 
     .blog-series__header > p:last-child {
@@ -151,6 +164,11 @@ pagination:
       color: var(--global-text-color-light);
       font-size: 0.8rem;
       line-height: 1.5;
+    }
+
+    .blog-series__languages {
+      padding: 0 1rem 1rem;
+      font-size: 0.85rem;
     }
 
     .blog-series__link {
