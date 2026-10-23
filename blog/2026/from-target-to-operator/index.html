@@ -1,0 +1,291 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> From Target to Operator: Mixture, Selection, and Synthesis | Jiaxing Wang </title> <meta name="author" content="Jiaxing Wang"> <meta name="description" content="How mixture and selection turn a shared bilevel objective into practical allocation rules—and what changes when we generate the data itself."> <meta name="keywords" content="data-centric AI, large language models, data curation, data mixture, data selection, data synthesis, bilevel optimization"> <meta property="og:site_name" content="Jiaxing Wang"> <meta property="og:type" content="article"> <meta property="og:title" content="Jiaxing Wang | From Target to Operator: Mixture, Selection, and Synthesis"> <meta property="og:url" content="https://jiaxingwang10.github.io/blog/2026/from-target-to-operator/"> <meta property="og:description" content="How mixture and selection turn a shared bilevel objective into practical allocation rules—and what changes when we generate the data itself."> <meta property="og:image" content="/assets/img/prof_pic.jpg"> <meta property="og:locale" content="en"> <meta name="twitter:card" content="summary"> <meta name="twitter:title" content="From Target to Operator: Mixture, Selection, and Synthesis"> <meta name="twitter:description" content="How mixture and selection turn a shared bilevel objective into practical allocation rules—and what changes when we generate the data itself."> <meta name="twitter:image" content="/assets/img/prof_pic.jpg"> <script type="application/ld+json">
+    {
+        "author":
+        {
+            "@type": "Person",
+            "name": "Jiaxing Wang"
+        },
+        "url": "https://jiaxingwang10.github.io/blog/2026/from-target-to-operator/",
+        "@type": "BlogPosting",
+        "description": "How mixture and selection turn a shared bilevel objective into practical allocation rules—and what changes when we generate the data itself.",
+        "headline": "From Target to Operator: Mixture, Selection, and Synthesis",
+        
+        "sameAs": ["https://github.com/jiaxingwang10","https://www.linkedin.com/in/jiaxing-wang-bb289b3a5","https://scholar.google.com/citations?user=EHGfstcAAAAJ"],
+        
+        "name": "Jiaxing Wang",
+        "@context": "https://schema.org"
+    }
+  </script> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <style>
+  :root {
+    --max-content-width: 930px;
+  }
+</style> <link rel="stylesheet" href="/assets/css/tailwind.css?v=50c64c15cbb9fd1ce6056fdb8bcb4b62"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.css" integrity="sha256-zTN0r+0OKaIv2xqeNNIYxNk0pWJ6+IqPGc1iDgVzWF0=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css" integrity="sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scholar-icons@1.0.3/css/scholar-icons.css" integrity="sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY=" crossorigin="anonymous"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%94%AC&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=d41d8cd98f00b204e9800998ecf8427e"> <link rel="canonical" href="https://jiaxingwang10.github.io/blog/2026/from-target-to-operator/"> </head> <body class="fixed-top-nav sticky-bottom-footer"> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> Jiaxing Wang </a> <button class="navbar-toggler collapsed navbar-toggler-main" type="button" data-nav-toggle="navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse navbar-collapse-main" id="navbarNav"> <ul class="navbar-nav navbar-menu-list flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">About </a> </li> <li class="nav-item active"> <a class="nav-link" href="/blog/">Blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">Publications </a> </li> <li class="nav-item "> <a class="nav-link" href="/repositories/">Repositories </a> </li> <li class="nav-item "> <a class="nav-link" href="/cv/">CV </a> </li> <li class="nav-item"> <button id="search-toggle" type="button" title="Search" aria-label="Open search"> <span class="nav-link">ctrl k <i class="fa-solid fa-magnifying-glass"></i></span> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="row"> <div class="col-sm-9"> <div class="post"> <header class="post-header"> <h1 class="post-title">From Target to Operator: Mixture, Selection, and Synthesis</h1> <p class="post-meta"> Created on October 13, 2026 </p> <p class="post-tags"> <a href="/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a>   ·   <a href="/blog/tag/llm"> <i class="fa-solid fa-hashtag fa-sm"></i> llm</a>   <a href="/blog/tag/data-curation"> <i class="fa-solid fa-hashtag fa-sm"></i> data-curation</a>   <a href="/blog/tag/bilevel-optimization"> <i class="fa-solid fa-hashtag fa-sm"></i> bilevel-optimization</a>   <a href="/blog/tag/data-selection"> <i class="fa-solid fa-hashtag fa-sm"></i> data-selection</a>   <a href="/blog/tag/data-synthesis"> <i class="fa-solid fa-hashtag fa-sm"></i> data-synthesis</a>   ·   <a href="/blog/category/research"> <i class="fa-solid fa-tag fa-sm"></i> research</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <blockquote> <p><strong>Designing What Models Learn · Part 3 of 3</strong><br> <em>Essays on targets, training distributions, and data 好的operators</em><br> <a href="/blog/2026/the-3-point-win-that-disappeared/">Advancement vs. Acceleration</a> · <a href="/blog/2026/what-makes-data-good/">What Makes Data Good?</a> · <strong>From Target to Operator</strong></p> </blockquote> <p>Suppose we want a language model to perform better on a target—a domain, a task, or a set of capabilities—and can change the data it trains on. Which changes should we make?</p> <h2 id="one-objective-three-operators">One objective, three operators</h2> <p>A direct way to pose the problem is to choose a training distribution $q$ by evaluating the model $\theta^*(q)$ it produces on the target. Let $\mathcal Q$ be the family of training distributions available to us. This gives a bilevel objective:</p> \[\min_{q\in\mathcal Q} \mathcal L_{\mathrm{target}}\!\left(\theta^*(q)\right) \quad\text{s.t.}\quad \theta^*(q)\in\arg\min_\theta \mathbb E_{x\sim q}[\ell(x;\theta)].\] <p>The inner problem trains the model on $q$. The outer problem chooses that distribution to improve the trained model’s target performance.</p> <p>The <a href="/blog/2026/what-makes-data-good/">previous essay</a> develops the motivation for this view. Here, we turn to the “how”: <strong>what changes can we make to the training data, and how can we find changes that move us toward that goal?</strong> The first concerns the data operator, and the second concerns the solver.</p> <p>Three common operators are to adjust the proportions of data from different domains (<strong>mixture</strong>), choose examples or tokens from an existing pool (<strong>selection</strong>), or generate new training examples (<strong>synthesis</strong>).</p> <table> <thead> <tr> <th>Operator</th> <th>Decision variable</th> <th>What it can change</th> <th>Its boundary</th> </tr> </thead> <tbody> <tr> <td>Mixture</td> <td>Domain proportions</td> <td>Exposure across predefined groups</td> <td>Cannot distinguish examples inside a group</td> </tr> <tr> <td>Selection</td> <td>Example or token weights</td> <td>Exposure within an existing pool</td> <td>Cannot create a missing mode</td> </tr> <tr> <td>Synthesis</td> <td>Generator, prompt, or task specification</td> <td>The examples available for training</td> <td>Does not guarantee useful or correct data</td> </tr> </tbody> </table> <p>Each operator defines a different feasible family $\mathcal Q$. Mixture and selection change exposure within existing data. If a useful behavior is present but rare, reallocating exposure may help. If the required training material is absent, we need to collect or generate it. Synthesis lets us change which examples are available, extending distribution design beyond reallocation.</p> <p>Choosing an operator gives us a set of decisions—domain proportions, token masks, or generation choices. For a given operator, we still need to optimize its decision variables. The most literal approach is to propose a mixture, train a language model, evaluate it on the target, and repeat until the compute budget, or our patience, runs out. Trying every possible subset for selection is even less inviting. Can we optimize these data decisions without solving the training problem from scratch for every candidate?</p> <h2 id="from-the-bilevel-objective-to-an-allocation-update">From the bilevel objective to an allocation update</h2> <div style="color: var(--global-text-color-light); opacity: 0.52; font-size: 0.86rem; font-style: italic; line-height: 1.55;"> <p>This section explains how the penalty reformulation leads to the allocation update. If you prefer the intuition behind the update rules, you can skip ahead to the sections below: <a href="#tandem-which-domains-deserve-more-exposure">TANDEM: which domains deserve more exposure?</a> and <a href="#blade-which-tokens-deserve-the-budget">BLADE: which tokens deserve the budget?</a>. These explain how the resulting update rules adjust domain weights or select tokens.</p> </div> <p>We first consider mixture and selection, where the decision is how to allocate training exposure within existing data. Let $w$ denote these allocation variables and $\mathcal W$ their feasible set. For mixture, $w_k$ is the sampling proportion of domain $k$; for selection, $w_p$ is the selection weight of candidate $p$. Their dimensions and constraints differ, but both induce a training distribution $q_w$.</p> <p>Writing $\mathcal L_{\mathrm{train}}(\theta;w)=\mathbb E_{x\sim q_w}[\ell(x;\theta)]$, we can express the same bilevel objective in terms of $w$. We use $\theta^*(w)$ as shorthand for the model trained on $q_w$. Synthesis will require a different parameterization, which we return to below.</p> <p>We use a penalty reformulation to turn the coupled bilevel problem into a single-level optimization problem. Let $V(w)=\min_\theta\mathcal L_{\mathrm{train}}(\theta;w)$ be the minimum training loss under allocation $w$. We penalize the excess training loss above this minimum:</p> \[H_\lambda(w,\theta) =\mathcal L_{\mathrm{target}}(\theta) +\lambda\left[ \mathcal L_{\mathrm{train}}(\theta;w)-V(w) \right], \qquad\lambda&gt;0.\] <p>The target term encourages low target loss, while the penalty encourages the model to approximately satisfy the inner training constraint. This construction introduces two model roles: a <strong>proxy</strong>, trained to approximate the minimum in $V(w)$, and a <strong>reference</strong>, trained on target loss plus a weighted training loss. Their ideal optimization targets are:</p> \[\begin{aligned} &amp;\theta_{\mathrm{proxy}}^*(w) \in\arg\min_\theta\mathcal L_{\mathrm{train}}(\theta;w),\\ &amp;\theta_{\mathrm{ref}}^*(w) \in\arg\min_\theta\left[ \mathcal L_{\mathrm{target}}(\theta) +\lambda\mathcal L_{\mathrm{train}}(\theta;w) \right]. \end{aligned}\] <p>The algorithms coordinate updates of the two models and the allocation. The proxy parameters $\theta_{\mathrm{proxy}}$ take gradient steps on training loss, while the reference parameters $\theta_{\mathrm{ref}}$ take steps on target loss plus the weighted training loss. Both use a finite number of steps to approximate the minimization problems above.</p> <p>For the allocation update, we hold $\theta_{\mathrm{proxy}}$ and $\theta_{\mathrm{ref}}$ fixed and use the proxy to approximate the inner minimum. We then differentiate the resulting loss contrast with respect to $w$:</p> \[\begin{aligned} &amp;\partial_w\left\{\lambda\left[ \mathcal L_{\mathrm{train}}(\theta_{\mathrm{ref}};w) -\mathcal L_{\mathrm{train}}(\theta_{\mathrm{proxy}};w) \right]\right\}\\ &amp;=\lambda\left[ \partial_w\mathcal L_{\mathrm{train}}(\theta_{\mathrm{ref}};w) -\partial_w\mathcal L_{\mathrm{train}}(\theta_{\mathrm{proxy}};w) \right]. \end{aligned}\] <p>For the specific mixture and selection formulations outlined in the next two sections, training loss is linear in $w$. The allocation update therefore reduces to the loss difference:</p> \[s_i= \mathcal L_{\mathrm{train}}^i(\theta_{\mathrm{proxy}}) -\mathcal L_{\mathrm{train}}^i(\theta_{\mathrm{ref}}).\] <p>Here $i$ indexes domains for mixture and tokens for selection. The allocation gradient estimate is proportional to $-s_i$, so descent favors larger $s_i$, subject to the operator’s constraints.</p> <figure> <picture> <img src="/assets/img/blog/data-curation/bilevel-solver-bridge.svg" class="img-fluid rounded" width="100%" height="auto" data-zoomable="" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> <p><em>The shared penalty-based solver for mixture and selection. Two coupled models produce a loss-difference update signal; the operator’s constraints determine the resulting allocation rule.</em></p> <h2 id="tandem-which-domains-deserve-more-exposure"> <a href="https://arxiv.org/abs/2606.04401" rel="external nofollow noopener" target="_blank">TANDEM</a>: which domains deserve more exposure?</h2> <p>Suppose we can adjust how often the learner sees each of $K$ domains. Here $w_k$ is the probability of sampling domain $k$, and $\mathcal L_{\mathrm{train}}^k(\theta)$ is the model’s expected training loss on that domain. The shared bilevel formulation takes the following concrete form:</p> <table> <thead> <tr> <th>Component</th> <th>TANDEM</th> </tr> </thead> <tbody> <tr> <td>Target loss</td> <td>A weighted average of held-out losses across domains. The target weights $\widehat w_k$ specify each domain’s contribution to evaluation (typically, $\widehat w_k=1/K$). These weights stay fixed while the training proportions $w$ are optimized.</td> </tr> <tr> <td>Training loss</td> <td>$\mathcal L_{\mathrm{train}}(\theta;w)=\sum_{k=1}^K w_k\mathcal L_{\mathrm{train}}^k(\theta)$.</td> </tr> <tr> <td>Feasible allocations</td> <td>Domain proportions on the probability simplex $\mathcal W_{\mathrm{mix}}$: $w_k\geq0$ and $\sum_k w_k=1$.</td> </tr> </tbody> </table> <p>The training loss shows the linear dependence on $w$ used in the shared solver: each domain weight multiplies its domain loss. Differentiating with respect to $w_k$ therefore returns $\mathcal L_{\mathrm{train}}^k(\theta)$. This is why the shared solver’s difference of training-loss derivatives becomes a difference of domain losses between the reference and proxy, giving the allocation gradient estimate $-\lambda s_k$. A projected-gradient step turns it into a new mixture:</p> \[w^{(t+1)} =\Pi_{\mathcal W_{\mathrm{mix}}} \left(w^{(t)}+\eta_w\lambda s^{(t)}\right).\] <p>At the domain level, a larger positive $s_k$ means that incorporating target information has improved predictions on domain $k$: the reference has lower domain loss than the training-only proxy. The update gives such domains upward pressure in the training mixture. Projection keeps the probabilities nonnegative and summing to one. The learned mixture is then used to train a fresh final model.</p> <div style="color: var(--global-text-color-light); opacity: 0.52; font-size: 0.86rem; font-style: italic; line-height: 1.55;"> <p>In practice, TANDEM synchronizes the two models to control their separation and stabilize optimization, while scheduling updates to reduce search cost. The paper provides the full procedure and a first-order stationarity guarantee under its stated assumptions; see <a href="https://arxiv.org/html/2606.04401#S2.SS2" rel="external nofollow noopener" target="_blank">Section 2.2</a> and <a href="https://arxiv.org/html/2606.04401#A1" rel="external nofollow noopener" target="_blank">Appendix A</a> in <a href="https://arxiv.org/pdf/2606.04401v1" rel="external nofollow noopener" target="_blank">TANDEM</a>.</p> </div> <p>For a concrete result, consider the <strong><em>data-restricted</em></strong> SlimPajama experiment: a 160M model trained from a 300M-token candidate corpus, with smaller domains repeatedly sampled. TANDEM’s learned mixture reduces averaged perplexity from <strong>31.53 under Uniform to 28.07</strong>, under the same final-training protocol. Here averaged perplexity is the exponential of the mean held-out domain loss.</p> <p>What initially surprised me was how little there was to gain in the <strong><em>data-abundant, single-pass</em></strong> pretraining: TANDEM achieved an averaged perplexity of <strong>25.43</strong>, compared with <strong>25.74</strong> under Uniform. In this experiment, both Uniform training and target evaluation assign weight $1/K$ to each domain, and their within-domain data come from the same underlying distributions. The population objectives therefore match. Abundant data allows training without repeated exposure to individual samples, and the observed train–validation gaps remain close to zero. Later, the work discussed in <a href="/blog/2026/the-3-point-win-that-disappeared/">Part 1</a> helped make sense of this contrast: this matched regime leaves little distributional mismatch for reweighting to correct. The solver was effective, but the task offered limited headroom for advancement.</p> <h2 id="blade-which-tokens-deserve-the-budget"> <a href="https://arxiv.org/abs/2606.18650" rel="external nofollow noopener" target="_blank">BLADE</a>: which tokens deserve the budget?</h2> <p>A domain is a blunt unit of intervention. Useful and unhelpful material can occur in the same document, or even the same reasoning trace. We therefore move the allocation decision down to individual tokens. Here $w_p$ indicates whether candidate token $p$ contributes to training: one means retained, zero means masked. $\mathcal L_{\mathrm{train}}^p(\theta)$ is then the prediction loss at token position $p$. For a pool of $P$ candidates, we retain a fraction $f$. The shared bilevel formulation takes the following concrete form:</p> <table> <thead> <tr> <th>Component</th> <th>BLADE</th> </tr> </thead> <tbody> <tr> <td>Target loss</td> <td>Prediction loss on the target validation data, $\mathcal L_{\mathrm{target}}(\theta)$.</td> </tr> <tr> <td>Training loss</td> <td>Average loss over retained token positions: $\mathcal L_{\mathrm{train}}(\theta;w)=\frac{1}{fP}\sum_{p=1}^P w_p\mathcal L_{\mathrm{train}}^p(\theta)$.</td> </tr> <tr> <td>Feasible allocations</td> <td>A token mask with $w_p\in\lbrace 0,1\rbrace$ and $\sum_p w_p=fP$.</td> </tr> </tbody> </table> <p>The training loss shows the same linear dependence on $w$, so the shared solver gives a token-level loss-difference update, with allocation gradient estimate $-\lambda s_p/(fP)$. To optimize the binary mask, we relax $w_p\in\lbrace 0,1\rbrace$ to $w_p\in[0,1]$, keeping the same budget. The resulting feasible set is a capped simplex.</p> <p>In TANDEM, domain proportions are continuous probabilities constrained to sum to one, so we use projected gradient descent to keep each update within the simplex. BLADE instead requires a keep-or-discard decision for each token. We temporarily allow fractional token weights to make this discrete problem amenable to continuous optimization. Frank–Wolfe then gives an elegant result: with a full, greedy step, the update lands directly on a binary mask—the $fP$ tokens with the largest loss-difference scores—with no extra rounding needed:</p> \[w_p =\mathbf 1\left\{p\in\operatorname{Top}_{fP}(s)\right\}.\] <p>The token-level loss difference reflects the predictive improvement associated with target-informed training, providing a signal for which tokens may help align the learner with the target. To make this criterion practical at corpus scale, BLADE applies the selection rule within candidate batches, enabling online token selection without scoring and storing the entire corpus in advance.</p> <p>We evaluate token selection by continually pretraining a 13B language model on a 5B-token OpenWebMath pool. Across nine math-related benchmarks, BLADE achieves <strong>54.4%</strong> average accuracy, compared with <strong>52.5%</strong> for <a href="https://arxiv.org/abs/2404.07965" rel="external nofollow noopener" target="_blank">RHO-1</a> and <strong>43.7%</strong> for full-pool continual pretraining. BLADE and RHO-1 each retain <strong>3B loss-bearing tokens</strong>, while full-pool training uses all <strong>5B tokens</strong>.</p> <div style="color: var(--global-text-color-light); opacity: 0.52; font-size: 0.86rem; font-style: italic; line-height: 1.55;"> <p>BLADE connects the bilevel foundation of influence-based selection with the practical loss-difference criterion of <a href="https://arxiv.org/abs/2404.07965" rel="external nofollow noopener" target="_blank">RHO-style methods</a>, while introducing a dynamic reference synchronized with the learner. The penalty formulation provides this connection using first-order model updates and loss evaluations, without the inverse-Hessian computations associated with classical <a href="https://proceedings.mlr.press/v70/koh17a.html" rel="external nofollow noopener" target="_blank">influence functions</a>. The reference is periodically refreshed from the proxy and updated with target information, keeping the comparison tied to the learner rather than a fixed pretrained reference. See <a href="https://arxiv.org/html/2606.18650#S2.SS3" rel="external nofollow noopener" target="_blank">Section 2.3</a> for the relationship between the methods. The analyzed full-coordinate procedure also has a first-order stationarity guarantee under the assumptions and parameter choices in <a href="https://arxiv.org/html/2606.18650#A1" rel="external nofollow noopener" target="_blank">Appendix A</a>.</p> </div> <p>TANDEM and BLADE use the same proxy/reference construction to update training exposure. The constraints turn that update into domain proportions in one case and a Top-$k$ token mask in the other. The loss-difference update depends jointly on the target and the learned states of the proxy and reference models. These states reflect the learning procedure and the combined effect of the training examples, including how their learning signals overlap or complement one another. This makes the perspective of <a href="/blog/2026/what-makes-data-good/">Part 2</a> concrete: the criterion evaluates data through a learner and a target, rather than assigning each domain or token an intrinsic quality score.</p> <h2 id="synthesis-when-reallocation-is-not-enough">Synthesis: when reallocation is not enough</h2> <p>Both data mixture and selection assume useful training material is somewhere in the pool. What if it is not? A curator cannot recover an absent tool-use example, failure-recovery pattern, or reasoning strategy. Synthesis lets us make the examples themselves part of the decision.</p> <p>As with mixture and selection, synthesis is evaluated by the target performance of the model trained on the resulting data. The distribution-level objective remains the same, but its parameterization changes. Let $\psi$ control a generator, its prompts, or its task specifications, inducing a training distribution $q_\psi$. Writing $\theta^*(\psi)$ for the model trained on $q_\psi$, the problem becomes</p> \[\min_{\psi\in\Psi} \mathcal L_{\mathrm{target}}\!\left(\theta^*(\psi)\right) \quad\text{s.t.}\quad \theta^*(\psi)\in\arg\min_\theta \mathbb E_{x\sim q_\psi}[\ell(x;\theta)].\] <p>The permitted generation parameters $\Psi$ and the generation budget define the reachable family $\mathcal Q_{\mathrm{synth}}={q_\psi:\psi\in\Psi}$. Generation can introduce missing modes or add examples within existing ones.</p> <p>For mixture and selection, the training loss depends linearly on the allocation weights, yielding a simple loss-difference update. Whether an equally simple and efficient update can be obtained when the decision changes the generated examples themselves remains an open question for extending this solver to synthesis.</p> <p>These operators, mixture, selection and synthesis, can also work together in a target-driven data pipeline. One practical loop I use is:</p> <blockquote> <p>Target failures → identify missing training material → generate candidates → select or verify → train the model → evaluate on the target.</p> </blockquote> <p>In this loop, an LLM generates candidates and target-guided selection determines what to retain, bypassing the need to solve the bilevel generation problem.</p> <h2 id="target-gap-and-operator">Target, Gap and operator</h2> <p>Across these three essays, the questions have moved from <strong>what kind of improvement we obtained</strong>, to <strong>what makes a training distribution valuable</strong>, to <strong>how we can change it in practice</strong>.</p> <p>For a new data problem, the starting questions are what target matters, where ordinary training falls short, and whether the available data contains material that can help. These answers guide the choice of operator and how to optimize it.</p> <p>Or, in three lines:</p> <blockquote> <p><strong>Target defines the objective.</strong><br> <strong>Gap defines the headroom.</strong><br> <strong>Operator defines the reachable improvement.</strong></p> </blockquote> <p>Data design begins when those three are specified together.</p> <footer class="essay-footer"> <section class="essay-citation" aria-label="Cite this essay"> <p class="essay-citation__label">Cite this essay</p> <pre class="essay-citation__paper"><code>@misc{wang2026targettooperator,
+  title  = {From Target to Operator: Mixture, Selection, and Synthesis},
+  author = {Wang, Jiaxing},
+  year   = {2026},
+  url    = {https://jiaxingwang10.github.io/blog/2026/from-target-to-operator/},
+  note   = {Designing What Models Learn, Part 3}
+}</code></pre> </section> <nav class="essay-navigation" aria-label="Series reading navigation"> <a class="essay-navigation__item essay-navigation__item--previous" href="/blog/2026/what-makes-data-good/" rel="prev"> <span class="essay-navigation__label">← Previous read · Part 2</span> <span class="essay-navigation__title">What Makes Data Good?</span> </a> </nav> </footer> <style>
+  .essay-footer {
+    margin-top: 3rem;
+  }
+  .essay-citation__label {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  .essay-citation__paper {
+    padding: clamp(1rem, 3vw, 1.75rem);
+    border: 1px solid #e3dfd5;
+    border-radius: 0;
+    background: #faf9f6;
+    color: #33312e;
+    box-shadow: 0 2px 4px rgba(51, 49, 46, 0.025);
+    font-size: 0.85rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .essay-citation__paper code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+  }
+  .essay-navigation {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--global-divider-color);
+  }
+  .essay-navigation__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--global-text-color);
+    text-decoration: none;
+  }
+  .essay-navigation__item--next {
+    grid-column: 2;
+    text-align: right;
+  }
+  .essay-navigation__label {
+    color: var(--global-text-color-light);
+    font-size: 0.8rem;
+  }
+  .essay-navigation__title {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .essay-navigation__item:hover,
+  .essay-navigation__item:focus-visible {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+  html[data-theme='dark'] .essay-citation__paper {
+    border-color: #48443c;
+    background: #292824;
+    color: #e6e2d9;
+  }
+  @media (max-width: 575px) {
+    .essay-navigation {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .essay-navigation__item--next {
+      grid-column: 1;
+      text-align: left;
+    }
+  }
+</style> </div> </article> </div> </div> <div class="col-sm-3"> <nav id="toc-sidebar" class="sticky-top toc toc-sidebar" aria-label="Table of contents" data-toc-collapse="expanded" data-toc-collapse-depth=""></nav> </div> </div> </div> <footer class="sticky-bottom mt-5" role="contentinfo"> <div class="container"> © Copyright 2026 Jiaxing Wang. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. </div> </footer> <script>
+  window.alFolio = {
+    compatBootstrap: false
+  };
+</script> <script src="/assets/js/nav-toggle.js?v=141bd79a73ebc0f0b6ea58e440ae79fc"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=e49affc7bd2646f6acdad1dbe02c2359" type="text/javascript"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/al_math/js/mathjax-setup.js"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6" crossorigin="anonymous"></script> <script src="/assets/js/tooltips-setup.js?v=fe487e99db6c43751e6e7bdb2d6a0611"></script> <script defer src="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.min.js" integrity="sha256-lo/r+jQ81wWrxdIiiiEEd538z4+dTJTt+leOuAS7GCw=" crossorigin="anonymous"></script> <script src="/assets/js/no_defer.js?v=53b1b1a645525975c963ce8bf8bfefcf"></script> <script defer src="/assets/js/common.js?v=87baac90f765f2f3362dcf6aaf312a8a"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=896d254890d9b47f0281f63bfccf0dee"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/al_img_tools/js/zoom.js"></script> <script defer src="/assets/js/progress-bar.js?v=499464c5c63ced6cf7ad62509f1e2610" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js" integrity="sha256-uMJJ3EoTyfRBoTbR+lrfu1uRQ87RZG8AR3cVNuQVeFg=" crossorigin="anonymous"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/al_search/js/search/ninja-keys.min.js"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/al_search/js/search-setup.js"></script> <script>
+// get the ninja-keys element
+const ninja = document.querySelector('ninja-keys');
+
+// add the home and posts menu items
+ninja.data = [{
+    id: "nav-about",
+    title: "About",
+    section: "Navigation",
+    handler: () => {
+      window.location.href = "/";
+    },
+  },{id: "nav-blog",
+          title: "Blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "nav-publications",
+          title: "Publications",
+          description: "publications by categories in reversed chronological order. generated by jekyll-scholar.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/publications/";
+          },
+        },{id: "nav-repositories",
+          title: "Repositories",
+          description: "Open-source projects and repositories by Jiaxing Wang.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/repositories/";
+          },
+        },{id: "nav-cv",
+          title: "CV",
+          description: "Curriculum vitae of Jiaxing Wang.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/cv/";
+          },
+        },{id: "post-the-3-5-point-win-that-disappeared-advancement-vs-acceleration",
+        
+          title: "The 3.5-Point Win That Disappeared: Advancement vs. Acceleration",
+        
+        description: "A data recipe can look much better at a fixed budget and still converge to the same model. How can we tell lasting advancement from temporary acceleration?",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/the-3-point-win-that-disappeared/";
+          
+        },
+      },{id: "post-what-makes-data-good",
+        
+          title: "What Makes Data Good?",
+        
+        description: "Quality and diversity are useful words, but incomplete objectives. A target-relative view changes what we score, select, and synthesize.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/what-makes-data-good/";
+          
+        },
+      },{id: "post-from-target-to-operator-mixture-selection-and-synthesis",
+        
+          title: "From Target to Operator: Mixture, Selection, and Synthesis",
+        
+        description: "How mixture and selection turn a shared bilevel objective into practical allocation rules—and what changes when we generate the data itself.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/from-target-to-operator/";
+          
+        },
+      },{id: "books-the-godfather",
+          title: 'The Godfather',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/books/the_godfather/";
+            },},{id: "news-our-paper-quot-tandem-bi-level-data-mixture-optimization-with-twin-networks-quot-https-openreview-net-forum-id-szbfutbzwp-is-accepted-by-neurips-2025",
+          title: 'Our paper [&amp;quot;TANDEM: Bi-Level Data Mixture Optimization with Twin Networks&amp;quot;](https://openreview.net/forum?id=szBFUtBzWP) is accepted by...',
+          description: "",
+          section: "News",},{id: "news-our-paper-quot-the-primacy-of-magnitude-in-low-rank-adaptation-quot-https-openreview-net-forum-id-s4lnwgjacg-is-accepted-by-neurips-2025-spot-light",
+          title: 'Our paper [&amp;quot;The Primacy of Magnitude in Low-Rank Adaptation&amp;quot;](https://openreview.net/forum?id=s4LnWgjacg) is accepted by NeurIPS...',
+          description: "",
+          section: "News",},{id: "news-we-present-jd-oxygen-ai-item-center-oxygen-aiic-v1-https-arxiv-org-abs-2606-28070-an-industrial-scale-llm-vlm-centric-solution-for-item-understanding-management-and-applications",
+          title: 'We present [JD Oxygen AI Item Center (Oxygen AIIC) V1](https://arxiv.org/abs/2606.28070), an industrial-scale LLM/VLM-centric...',
+          description: "",
+          section: "News",},{id: "news-our-paper-flowtrain-flow-based-decoupled-training-for-industrial-grade-vision-language-models-and-quot-mixemb-importance-aware-quantization-and-caching-co-design-for-industrial-decentral-ized-embedding-training-quot-are-accepted-by-emnlp-2026-industrial-track",
+          title: 'Our paper “FlowTrain: Flow-Based Decoupled Training for Industrial-Grade Vision-Language Models” and &amp;quot;MixEmb: Importance-Aware...',
+          description: "",
+          section: "News",},{id: "news-our-papers-quot-blade-scalable-bi-level-adaptive-data-selection-for-llm-training-quot-https-arxiv-org-abs-2606-18650-and-quot-the-hidden-power-of-scaling-factor-in-lora-optimization-quot-https-arxiv-org-abs-2606-12883-are-accepted-by-neurips-2026",
+          title: 'Our papers [&amp;quot;BLADE: Scalable Bi-level Adaptive Data Selection for LLM Training&amp;quot;](https://arxiv.org/abs/2606.18650) and [&amp;quot;The...',
+          description: "",
+          section: "News",},{id: "projects-project-1",
+          title: 'project 1',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/1_project/";
+            },},{id: "projects-project-2",
+          title: 'project 2',
+          description: "a project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/2_project/";
+            },},{id: "projects-project-3-with-very-long-name",
+          title: 'project 3 with very long name',
+          description: "a project that redirects to another website",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/3_project/";
+            },},{id: "projects-project-4",
+          title: 'project 4',
+          description: "another without an image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/4_project/";
+            },},{id: "projects-project-5",
+          title: 'project 5',
+          description: "a project with a background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/5_project/";
+            },},{id: "projects-project-6",
+          title: 'project 6',
+          description: "a project with no image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/6_project/";
+            },},{id: "projects-project-7",
+          title: 'project 7',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/7_project/";
+            },},{id: "projects-project-8",
+          title: 'project 8',
+          description: "an other project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/8_project/";
+            },},{id: "projects-project-9",
+          title: 'project 9',
+          description: "another project with an image 🎉",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/9_project/";
+            },},{id: "teachings-data-science-fundamentals",
+          title: 'Data Science Fundamentals',
+          description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/data-science-fundamentals/";
+            },},{id: "teachings-introduction-to-machine-learning",
+          title: 'Introduction to Machine Learning',
+          description: "This course provides an introduction to machine learning concepts, algorithms, and applications. Students will learn about supervised and unsupervised learning, model evaluation, and practical implementations.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-to-machine-learning/";
+            },},{
+        id: 'social-email',
+        title: 'email',
+        section: 'Socials',
+        handler: () => {
+          window.open("mailto:%77%6A%69%61%78%69%6E%67%39%34@%67%6D%61%69%6C.%63%6F%6D", "_blank");
+        },
+      },{
+        id: 'social-github',
+        title: 'GitHub',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://github.com/jiaxingwang10", "_blank");
+        },
+      },{
+        id: 'social-linkedin',
+        title: 'LinkedIn',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.linkedin.com/in/jiaxing-wang-bb289b3a5", "_blank");
+        },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=EHGfstcAAAAJ", "_blank");
+        },
+      },{
+        id: 'social-rss',
+        title: 'RSS Feed',
+        section: 'Socials',
+        handler: () => {
+          window.open("/feed.xml", "_blank");
+        },
+      },];
+
+</script> <script src="/assets/al_search/js/shortcut-key.js"></script> </body> </html>
