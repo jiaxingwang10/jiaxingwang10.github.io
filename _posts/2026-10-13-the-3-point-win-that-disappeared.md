@@ -14,7 +14,7 @@ toc:
   sidebar: right
 ---
 
-<!-- Series draft v3. Add the Advancement paper/arXiv link after it becomes public. -->
+<!-- Add the Advancement paper/arXiv link after it becomes public. -->
 
 > **Designing What Models Learn · Part 1 of 3**<br>
 > *Essays on targets, training distributions, and data operators*<br>

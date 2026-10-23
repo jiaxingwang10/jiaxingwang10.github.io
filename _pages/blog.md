@@ -1,7 +1,7 @@
 ---
 layout: default
 permalink: /blog/
-title: blog
+title: Blog
 nav: true
 nav_order: 1
 pagination:
@@ -35,7 +35,7 @@ pagination:
     <div class="blog-series__header">
       <p class="blog-series__eyebrow">A THREE-PART SERIES</p>
       <h2 id="designing-series-title">Designing What Models Learn</h2>
-      <p>Essays on targets, training distributions, and data operators.</p>
+      <p>Over the past few years, I’ve been studying how training-data distributions shape what language models learn. This series brings together observations, connections, and open questions from our work. I’ll update the essays as new experiments, papers, and code become available.</p>
     </div>
 
     <div class="blog-series__list">

@@ -14,7 +14,7 @@ toc:
   sidebar: right
 ---
 
-<!-- Series draft v4. Notation: q=training distribution, theta=model, w=mixture/selection allocation, psi=generation parameters, K=domains, P=candidate units, f=keep ratio. -->
+<!-- Notation: q=training distribution, theta=model, w=mixture/selection allocation, psi=generation parameters, K=domains, P=candidate units, f=keep ratio. -->
 
 > **Designing What Models Learn · Part 3 of 3**<br>
 > *Essays on targets, training distributions, and data 好的operators*<br>

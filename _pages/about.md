@@ -1,6 +1,6 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
 
 selected_papers: false
@@ -8,7 +8,7 @@ social: false
 
 announcements:
   enabled: false
-  scrollable: true 
+  scrollable: false
   limit: 5 
 
 latest_posts:
@@ -18,70 +18,98 @@ latest_posts:
 ---
 
 <style>
-  /* 1. 彻底隐藏默认标题 */
   .post-header {
-    display: none !important;
+    display: none;
   }
-  
-  /* 2. 导航栏：顶满页面顶部，链接靠右，与内容区域右边对齐 */
-  header, nav, #navbar, nav.navbar, .navbar {
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    width: 100% !important;
+  #navbar > .container {
+    max-width: 930px;
+    padding: 0.65rem 1rem;
+    justify-content: flex-end;
   }
-  nav.navbar, .navbar {
-    display: flex !important;
-    justify-content: center !important;
+  #navbar .nav-link {
+    font-size: 1.05rem;
   }
-  nav .container, nav .container-fluid,
-  .navbar .container, .navbar .container-fluid,
-  .navbar > .container {
-    display: flex !important;
-    justify-content: flex-end !important;
-    max-width: 930px !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    padding: 8px 0 !important;
+  #navbar .navbar-toggler {
+    margin-left: auto;
   }
-  header nav ul, nav.navbar ul, .navbar-nav,
-  .navbar-collapse, #navbarNav {
-    margin-left: auto !important;
-    margin-right: 0 !important;
-    display: flex !important;
-    justify-content: flex-end !important;
-    flex-wrap: wrap !important;
+  .profile-hero {
+    display: grid;
+    grid-template-columns: minmax(180px, 250px) minmax(0, 1fr);
+    align-items: center;
+    gap: 2.5rem;
+    padding: 40px 0;
   }
-  .navbar-brand, nav .brand {
-    display: none !important;
+  .profile-photo img {
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
-  /* 导航栏字体稍大 */
-  nav a, .navbar a, .nav-item a, .nav-link {
-    font-size: 1.05rem !important;
+  .profile-info {
+    min-width: 0;
   }
-
-  /* 3. 社交图标样式 */
+  .profile-info h1 {
+    margin-top: 0;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: bold;
+    line-height: 1.2;
+  }
+  .profile-name-zh {
+    display: inline-block;
+    font-size: 0.78em;
+    font-weight: normal;
+    white-space: nowrap;
+  }
   .profile-info .contact-icons {
-    font-size: 2rem; 
-    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 2rem;
     margin-top: 15px;
   }
-  .profile-info .contact-icons a {
-    margin-right: 15px; 
+  .profile-blog-link {
+    margin: 1.25rem 0 1.75rem;
+  }
+  @media (min-width: 576px) {
+    #navbar .navbar-collapse {
+      margin-left: auto;
+      flex-grow: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .profile-hero {
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+  @media (max-width: 575px) {
+    .profile-hero {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.25rem;
+      padding: 24px 0 28px;
+    }
+    .profile-photo {
+      max-width: 150px;
+    }
+    .profile-name-zh {
+      display: block;
+      margin-top: 0.3rem;
+    }
+    .news .table th {
+      min-width: 5.5rem;
+      font-size: 0.85rem;
+    }
   }
 </style>
 
-<div style="padding-top: 40px; padding-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+<div class="profile-hero">
   
-  <div style="width: 32%; min-width: 200px; padding-right: 20px;">
-    <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" alt="profile picture" style="width: 100%; max-width: 250px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <div class="profile-photo">
+    <img src="{{ 'prof_pic.jpg' | prepend: '/assets/img/' | relative_url }}" alt="Jiaxing Wang">
   </div>
 
-  <div class="profile-info" style="width: 65%; flex-grow: 1; min-width: 300px;">
-    <h1 style="margin-top: 0; font-size: 2.8rem; font-weight: bold;">Jiaxing Wang <span style="font-weight: normal; font-size: 2.2rem;">(王家兴)</span></h1>
+  <div class="profile-info">
+    <h1>Jiaxing Wang <span class="profile-name-zh">(王家兴)</span></h1>
     <p style="font-size: 1.2rem; margin-bottom: 5px;">Researcher, JD.com</p>
     <p style="font-size: 1.1rem; margin-bottom: 5px; color: var(--global-text-color-light);">Beijing, China</p>
     <p style="font-size: 1.1rem; margin-bottom: 15px;"><strong>Email:</strong> wjiaxing94 [at] gmail.com</p>
@@ -101,13 +129,15 @@ My research focuses on how training data shapes what models learn, and how to ma
 
 At JD Retail, I have deployed a data flywheel for product understanding that connects target evaluation, data generation and selection, and model training. My work also includes systems for efficient training and inference.
 
+<p class="profile-blog-link">For an overview of my recent work, see <a href="{{ '/blog/#designing-series-title' | relative_url }}">Designing What Models Learn</a>, a three-part essay series on training data and learning.</p>
+
 <h2>
-  <a href="{{ '/news/' | relative_url }}" style="color: inherit">news</a>
+  <a href="{{ '/news/' | relative_url }}" style="color: inherit">News</a>
 </h2>
 {% include news.liquid limit=true %}
 
 <h2>
-  <a href="{{ '/publications/' | relative_url }}" style="color: inherit">selected publications</a>
+  <a href="{{ '/publications/' | relative_url }}" style="color: inherit">Selected Publications</a>
 </h2>
 {% include selected_papers.liquid %}
 

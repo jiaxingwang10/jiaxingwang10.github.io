@@ -14,7 +14,7 @@ toc:
   sidebar: right
 ---
 
-<!-- Series draft v3. Add the Advancement paper/arXiv link after it becomes public. -->
+<!-- Add the Advancement paper/arXiv link after it becomes public. -->
 
 <p class="lead text-muted">Quality, Diversity, and the Missing Target</p>
 
