@@ -1,0 +1,311 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta name="google-site-verification" content="Wb9CdxtgOTGn9AXlMrjM4cfBuWQTchHksghUO8qcDs0"> <meta http-equiv="Permissions-Policy" content="interest-cohort=()"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> 从目标到操作：数据配比、筛选与合成 | Jiaxing Wang </title> <meta name="author" content="Jiaxing Wang"> <meta name="description" content="数据配比与筛选如何把共同的双层目标变成可执行的更新规则？当我们直接生成训练数据时，问题又有什么不同？"> <meta name="keywords" content="data-centric AI, large language models, data curation, data mixture, data selection, data synthesis, bilevel optimization"> <meta property="og:site_name" content="Jiaxing Wang"> <meta property="og:type" content="article"> <meta property="og:title" content="Jiaxing Wang | 从目标到操作：数据配比、筛选与合成"> <meta property="og:url" content="https://jiaxingwang10.github.io/blog/2026/from-target-to-operator-zh/"> <meta property="og:description" content="数据配比与筛选如何把共同的双层目标变成可执行的更新规则？当我们直接生成训练数据时，问题又有什么不同？"> <meta property="og:image" content="/assets/img/prof_pic.jpg"> <meta property="og:locale" content="en"> <meta name="twitter:card" content="summary"> <meta name="twitter:title" content="从目标到操作：数据配比、筛选与合成"> <meta name="twitter:description" content="数据配比与筛选如何把共同的双层目标变成可执行的更新规则？当我们直接生成训练数据时，问题又有什么不同？"> <meta name="twitter:image" content="/assets/img/prof_pic.jpg"> <script type="application/ld+json">
+    {
+        "author":
+        {
+            "@type": "Person",
+            "name": "Jiaxing Wang"
+        },
+        "url": "https://jiaxingwang10.github.io/blog/2026/from-target-to-operator-zh/",
+        "@type": "BlogPosting",
+        "description": "数据配比与筛选如何把共同的双层目标变成可执行的更新规则？当我们直接生成训练数据时，问题又有什么不同？",
+        "headline": "从目标到操作：数据配比、筛选与合成",
+        
+        "sameAs": ["https://github.com/jiaxingwang10","https://www.linkedin.com/in/jiaxing-wang-bb289b3a5","https://scholar.google.com/citations?user=EHGfstcAAAAJ"],
+        
+        "name": "Jiaxing Wang",
+        "@context": "https://schema.org"
+    }
+  </script> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <style>
+  :root {
+    --max-content-width: 930px;
+  }
+</style> <link rel="stylesheet" href="/assets/css/tailwind.css?v=50c64c15cbb9fd1ce6056fdb8bcb4b62"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.css" integrity="sha256-zTN0r+0OKaIv2xqeNNIYxNk0pWJ6+IqPGc1iDgVzWF0=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css" integrity="sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scholar-icons@1.0.3/css/scholar-icons.css" integrity="sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY=" crossorigin="anonymous"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%94%AC&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=d41d8cd98f00b204e9800998ecf8427e"> <link rel="canonical" href="https://jiaxingwang10.github.io/blog/2026/from-target-to-operator-zh/"> </head> <body class="fixed-top-nav sticky-bottom-footer"> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> Jiaxing Wang </a> <button class="navbar-toggler collapsed navbar-toggler-main" type="button" data-nav-toggle="navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse navbar-collapse-main" id="navbarNav"> <ul class="navbar-nav navbar-menu-list flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">About </a> </li> <li class="nav-item active"> <a class="nav-link" href="/blog/">Blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">Publications </a> </li> <li class="nav-item "> <a class="nav-link" href="/repositories/">Repositories </a> </li> <li class="nav-item "> <a class="nav-link" href="/cv/">CV </a> </li> <li class="nav-item"> <button id="search-toggle" type="button" title="Search" aria-label="Open search"> <span class="nav-link">ctrl k <i class="fa-solid fa-magnifying-glass"></i></span> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="row"> <div class="col-sm-9"> <style type="text/css">
+    .essay-chinese {
+  line-height: 1.9;
+  overflow-wrap: break-word;
+}
+.essay-chinese h2 {
+  margin-top: 2.25rem;
+  line-height: 1.5;
+}
+.essay-chinese h3 {
+  line-height: 1.5;
+}
+
+  </style> <div class="post"> <header class="post-header"> <h1 class="post-title">从目标到操作：数据配比、筛选与合成</h1> <p class="post-meta"> Created on October 13, 2026 </p> <p class="post-tags"> <a href="/blog/2026"> <i class="fa-solid fa-calendar fa-sm"></i> 2026 </a> </p> </header> <article class="post-content"> <div id="markdown-content"> <nav aria-label="Article language" style="margin-bottom: 1.25rem; font-size: 0.9rem;"> <a href="/blog/2026/from-target-to-operator/" lang="en" hreflang="en">English</a> <span aria-hidden="true"> / </span><span lang="zh-CN" aria-current="page">中文</span> </nav> <div class="essay-chinese" lang="zh-CN"> <p>本文为<a href="/blog/2026/from-target-to-operator/">英文原文</a>的中文版本，由 ChatGPT 辅助翻译。</p> <blockquote> <p><strong>语言模型的训练数据设计 · 三篇系列之三</strong><br> <em>什么时候值得优化，什么是好数据，以及如何改变数据。</em><br> <a href="/blog/2026/the-3-point-win-that-disappeared-zh/">加速与终点改善</a> · <a href="/blog/2026/what-makes-data-good-zh/">什么是好的训练数据？</a> · <strong>从目标到操作</strong></p> </blockquote> <p>假设我们希望语言模型在某个目标上表现得更好——它可以是一个领域、一项任务，或一组能力——而我们能够改变模型使用的训练数据。那么，应该作出哪些改变？</p> <h2 id="section">一个目标，三种操作</h2> <p>一种直接的表达是：根据训练得到的模型 $\theta^*(q)$ 在目标上的表现，选择训练分布 $q$。令 $\mathcal Q$ 表示我们可以使用的训练分布集合，就得到一个双层优化目标：</p> \[\min_{q\in\mathcal Q} \mathcal L_{\mathrm{target}}\!\left(\theta^*(q)\right) \quad\text{s.t.}\quad \theta^*(q)\in\arg\min_\theta \mathbb E_{x\sim q}[\ell(x;\theta)].\] <p>内层问题在 $q$ 上训练模型。外层问题选择这个分布，使训练后的模型在目标上表现得更好。</p> <p><a href="/blog/2026/what-makes-data-good-zh/">上一篇</a>讨论了为什么要采用这个视角。这里转向“怎么做”：<strong>我们可以怎样改变训练数据，又如何找到有助于实现目标的改变？</strong> 前者关乎数据操作方式（operator），后者关乎求解算法（solver）。</p> <p>三种常见的操作是：调整不同领域数据的比例，即<strong>配比（mixture）</strong>；从现有数据池中选择样本或 token，即<strong>筛选（selection）</strong>；以及生成新的训练样本，即<strong>合成（synthesis）</strong>。</p> <table> <thead> <tr> <th>操作</th> <th>决策变量</th> <th>能改变什么</th> <th>边界在哪里</th> </tr> </thead> <tbody> <tr> <td>配比</td> <td>领域比例</td> <td>预先定义的各组数据获得多少训练机会</td> <td>无法区分同一组内的样本</td> </tr> <tr> <td>筛选</td> <td>样本或 token 权重</td> <td>现有数据池中哪些内容参与训练、参与多少</td> <td>无法创造缺失的数据模式</td> </tr> <tr> <td>合成</td> <td>生成器、提示词或任务描述</td> <td>有哪些样本可用于训练</td> <td>不保证生成的数据有用或正确</td> </tr> </tbody> </table> <p>每种操作都对应不同的可行分布集合 $\mathcal Q$。配比与筛选改变的是现有数据的使用方式。如果有用的行为已经存在，只是较少出现，重新分配训练机会可能有帮助。如果所需训练材料根本不存在，就需要采集或生成。合成让我们能够改变可用样本本身，使训练分布的设计不再局限于重新分配已有数据。</p> <p>选定操作方式后，我们就有了一组需要决定的变量：领域比例、token 掩码，或生成相关的选择。但对于给定的操作，仍然需要优化这些变量。最直接的做法是：提出一个配比，训练一个语言模型，在目标上评价，再继续尝试，直到计算预算或耐心耗尽。对筛选来说，逐一尝试所有可能的子集就更不现实了。能否在不为每个候选方案从头训练模型的情况下，优化这些数据决策？</p> <h2 id="section-1">从双层目标到数据分配的更新</h2> <div style="color: var(--global-text-color-light); opacity: 0.52; font-size: 0.86rem; font-style: italic; line-height: 1.55;"> <p>本节解释惩罚重构如何得到数据分配的更新。如果你更关心更新规则的直观含义，可以跳到后面的两个小节：<a href="#tandem-mixture">TANDEM：哪些领域值得更多训练机会？</a>和 <a href="#blade-selection">BLADE：哪些 token 值得训练预算？</a>。它们分别说明更新规则如何调整领域权重、如何选择 token。</p> </div> <p>先考虑配比与筛选：决策是在现有数据之间分配训练机会。用 $w$ 表示分配变量，$\mathcal W$ 表示其可行集合。对于配比，$w_k$ 是领域 $k$ 的采样比例；对于筛选，$w_p$ 是候选项 $p$ 的选择权重。两者的维度和约束不同，但都能确定一个训练分布 $q_w$。</p> <p>记 $\mathcal L_{\mathrm{train}}(\theta;w)=\mathbb E_{x\sim q_w}[\ell(x;\theta)]$，就可以用 $w$ 来表达同一个双层目标。我们用 $\theta^*(w)$ 简写在 $q_w$ 上训练得到的模型。合成需要另一种参数化，后面再讨论。</p> <p>我们通过惩罚重构，把相互耦合的双层问题转化为单层优化问题。令 $V(w)=\min_\theta\mathcal L_{\mathrm{train}}(\theta;w)$ 表示分配方案 $w$ 下能够达到的最小训练 loss。将实际训练 loss 超出这个最小值的部分作为惩罚项：</p> \[H_\lambda(w,\theta) =\mathcal L_{\mathrm{target}}(\theta) +\lambda\left[ \mathcal L_{\mathrm{train}}(\theta;w)-V(w) \right], \qquad\lambda&gt;0.\] <p>目标项鼓励模型降低目标 loss，惩罚项则促使模型近似满足内层训练约束。这个构造引入了两种模型角色：<strong>代理模型（proxy）</strong>通过训练来近似 $V(w)$ 中的最小值；<strong>参考模型（reference）</strong>则优化目标 loss 与加权训练 loss 之和。它们各自理想的优化目标是：</p> \[\begin{aligned} &amp;\theta_{\mathrm{proxy}}^*(w) \in\arg\min_\theta\mathcal L_{\mathrm{train}}(\theta;w),\\ &amp;\theta_{\mathrm{ref}}^*(w) \in\arg\min_\theta\left[ \mathcal L_{\mathrm{target}}(\theta) +\lambda\mathcal L_{\mathrm{train}}(\theta;w) \right]. \end{aligned}\] <p>算法协调更新两个模型和数据分配。代理模型参数 $\theta_{\mathrm{proxy}}$ 沿训练 loss 的梯度更新；参考模型参数 $\theta_{\mathrm{ref}}$ 则针对目标 loss 与加权训练 loss 之和更新。两个模型都通过有限步更新来近似上面的最小化问题。</p> <p>更新数据分配时，我们固定 $\theta_{\mathrm{proxy}}$ 和 $\theta_{\mathrm{ref}}$，用代理模型近似内层最小值，再对得到的 loss 差关于 $w$ 求导：</p> \[\begin{aligned} &amp;\partial_w\left\{\lambda\left[ \mathcal L_{\mathrm{train}}(\theta_{\mathrm{ref}};w) -\mathcal L_{\mathrm{train}}(\theta_{\mathrm{proxy}};w) \right]\right\}\\ &amp;=\lambda\left[ \partial_w\mathcal L_{\mathrm{train}}(\theta_{\mathrm{ref}};w) -\partial_w\mathcal L_{\mathrm{train}}(\theta_{\mathrm{proxy}};w) \right]. \end{aligned}\] <p>在后面两个小节给出的配比与筛选的具体形式中，训练 loss 与 $w$ 是线性关系。因此，数据分配的更新可以归结为下面的 loss 差：</p> \[s_i= \mathcal L_{\mathrm{train}}^i(\theta_{\mathrm{proxy}}) -\mathcal L_{\mathrm{train}}^i(\theta_{\mathrm{ref}}).\] <p>对于配比，$i$ 索引领域；对于筛选，$i$ 索引 token。数据分配的梯度估计与 $-s_i$ 成正比，因此在操作约束允许的范围内，下降更新会偏向更大的 $s_i$。</p> <figure> <picture> <img src="/assets/img/blog/data-curation/bilevel-solver-bridge.svg" class="img-fluid rounded" width="100%" height="auto" data-zoomable="" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> <p><em>配比与筛选共享的惩罚法求解过程：两个相互耦合的模型提供基于 loss 差的更新信号；操作方式的约束决定这个信号最终如何变成数据分配规则。图中保留英文标注。</em></p> <h2 id="tandem-mixture"> <a href="https://arxiv.org/abs/2606.04401" rel="external nofollow noopener" target="_blank">TANDEM</a>：哪些领域值得更多训练机会？</h2> <p>假设我们可以调整模型接触 $K$ 个领域中每个领域的频率。这里，$w_k$ 是采样领域 $k$ 的概率，$\mathcal L_{\mathrm{train}}^k(\theta)$ 是模型在该领域上的期望训练 loss。共同的双层表达在这里具体化为：</p> <table> <thead> <tr> <th>组成部分</th> <th>TANDEM</th> </tr> </thead> <tbody> <tr> <td>目标 loss</td> <td>各领域留出数据 loss 的加权平均。目标权重 $\widehat w_k$ 决定每个领域对评价的贡献，通常取 $\widehat w_k=1/K$。优化训练比例 $w$ 时，这些目标权重保持不变。</td> </tr> <tr> <td>训练 loss</td> <td>$\mathcal L_{\mathrm{train}}(\theta;w)=\sum_{k=1}^K w_k\mathcal L_{\mathrm{train}}^k(\theta)$。</td> </tr> <tr> <td>可行的数据分配</td> <td>概率单纯形 $\mathcal W_{\mathrm{mix}}$ 上的领域比例：$w_k\geq0$，且 $\sum_k w_k=1$。</td> </tr> </tbody> </table> <p>这里的训练 loss 展示了前面共同求解过程中用到的线性关系：每个领域权重乘以对应的领域 loss。因此，对 $w_k$ 求导就得到 $\mathcal L_{\mathrm{train}}^k(\theta)$。这也解释了为什么两个模型的训练 loss 导数之差，会变成参考模型与代理模型的领域 loss 之差，给出数据分配的梯度估计 $-\lambda s_k$。投影梯度更新将它转化为新的配比：</p> \[w^{(t+1)} =\Pi_{\mathcal W_{\mathrm{mix}}} \left(w^{(t)}+\eta_w\lambda s^{(t)}\right).\] <p>在领域层面，较大的正值 $s_k$ 意味着：引入目标信息后，模型在领域 $k$ 上的预测有所改善，即参考模型的领域 loss 低于只使用训练数据的代理模型。更新会推动这些领域的训练比例上升。投影操作保证概率非负且加和为一。随后，我们用学到的配比从头训练最终模型。</p> <div style="color: var(--global-text-color-light); opacity: 0.52; font-size: 0.86rem; font-style: italic; line-height: 1.55;"> <p>实践中，TANDEM 通过同步两个模型来控制它们之间的差距、稳定优化，并通过更新调度减少搜索成本。论文给出了完整流程，以及在所述假设下的一阶平稳性保证；参见 <a href="https://arxiv.org/pdf/2606.04401v1" rel="external nofollow noopener" target="_blank">TANDEM</a> 的<a href="https://arxiv.org/html/2606.04401#S2.SS2" rel="external nofollow noopener" target="_blank">第 2.2 节</a>与<a href="https://arxiv.org/html/2606.04401#A1" rel="external nofollow noopener" target="_blank">附录 A</a>。</p> </div> <p>看一个具体结果：在<strong><em>数据受限</em></strong>的 SlimPajama 实验中，我们从 300M-token 候选语料训练一个 160M 参数模型，较小领域的数据会被反复采样。在相同的最终训练流程下，TANDEM 学到的配比把平均困惑度从 <strong>Uniform 的 31.53 降到 28.07</strong>。这里的平均困惑度，是各领域留出数据 loss 的均值取指数。</p> <p>最初让我意外的是，在<strong><em>数据充足、单遍训练</em></strong>的预训练中，能够获得的收益很小：TANDEM 的平均困惑度为 <strong>25.43</strong>，Uniform 为 <strong>25.74</strong>。在这个实验中，Uniform 训练和目标评价都给每个领域 $1/K$ 的权重，各领域内的数据也来自相同的底层分布，因此两个总体目标一致。充足的数据允许训练不必反复使用同一样本，观测到的训练—验证差距也接近零。后来，<a href="/blog/2026/the-3-point-win-that-disappeared-zh/">第一篇</a>讨论的工作帮助我们理解了这种反差：在这个已经匹配的场景中，几乎没有分布错配可供重新加权来纠正。求解算法有效，但任务本身留给终点改善的空间有限。</p> <h2 id="blade-selection"> <a href="https://arxiv.org/abs/2606.18650" rel="external nofollow noopener" target="_blank">BLADE</a>：哪些 token 值得训练预算？</h2> <p>以领域为单位调整数据，粒度还是较粗。有用和无用的内容可能出现在同一篇文档中，甚至同一条推理轨迹里。因此，我们把分配决策细化到单个 token。这里，$w_p$ 表示候选 token $p$ 是否参与训练：一表示保留，零表示屏蔽其训练 loss。$\mathcal L_{\mathrm{train}}^p(\theta)$ 是 token 位置 $p$ 上的预测 loss。对于含有 $P$ 个候选 token 的数据池，我们保留比例 $f$。共同的双层表达在这里具体化为：</p> <table> <thead> <tr> <th>组成部分</th> <th>BLADE</th> </tr> </thead> <tbody> <tr> <td>目标 loss</td> <td>目标验证数据上的预测 loss，$\mathcal L_{\mathrm{target}}(\theta)$。</td> </tr> <tr> <td>训练 loss</td> <td>保留 token 位置上的平均 loss：$\mathcal L_{\mathrm{train}}(\theta;w)=\frac{1}{fP}\sum_{p=1}^P w_p\mathcal L_{\mathrm{train}}^p(\theta)$。</td> </tr> <tr> <td>可行的数据分配</td> <td>token 掩码，满足 $w_p\in\lbrace 0,1\rbrace$，且 $\sum_p w_p=fP$。</td> </tr> </tbody> </table> <p>这里的训练 loss 与 $w$ 也有相同的线性关系，因此共同求解过程得到 token 层面的 loss 差更新，数据分配的梯度估计为 $-\lambda s_p/(fP)$。 为了优化二元掩码，我们把 $w_p\in\lbrace 0,1\rbrace$ 放松为 $w_p\in[0,1]$，同时保持预算不变。得到的可行集合是一个带分量上界的单纯形（capped simplex）。</p> <p>在 TANDEM 中，领域比例是加和为一的连续概率，因此我们用投影梯度下降，让每次更新都留在单纯形内。BLADE 则要求对每个 token 作出保留或丢弃的决定。暂时允许 token 权重取小数，是为了用连续优化处理这个离散问题。而 Frank–Wolfe 在这里恰好给出了一个很简洁的结果：采用完整的贪心步时，更新会直接落到二元掩码上，也就是选择 loss 差最大的 $fP$ 个 token，无需额外舍入：</p> \[w_p =\mathbf 1\left\{p\in\operatorname{Top}_{fP}(s)\right\}.\] <p>token 层面的 loss 差反映了引入目标信息后带来的预测改善，为哪些 token 可能帮助模型对齐目标提供信号。为了让这个准则适用于大规模语料，BLADE 在候选批次内执行选择，从而实现在线 token 筛选，无需提前对整个语料评分并保存所有分数。</p> <p>我们在一个 5B-token 的 OpenWebMath 数据池上，对 13B 语言模型进行持续预训练，以评价 token 筛选的效果。在九个数学相关 benchmark 上，BLADE 的平均准确率为 <strong>54.4%</strong>，<a href="https://arxiv.org/abs/2404.07965" rel="external nofollow noopener" target="_blank">RHO-1</a> 为 <strong>52.5%</strong>，全量数据持续预训练为 <strong>43.7%</strong>。BLADE 和 RHO-1 都保留 <strong>3B 个计入训练 loss 的 token</strong>，全量训练则使用全部 <strong>5B tokens</strong>。</p> <div style="color: var(--global-text-color-light); opacity: 0.52; font-size: 0.86rem; font-style: italic; line-height: 1.55;"> <p>BLADE 把基于 influence 的筛选方法所依赖的双层优化基础，与 <a href="https://arxiv.org/abs/2404.07965" rel="external nofollow noopener" target="_blank">RHO 类方法</a>中可实际执行的 loss 差准则联系起来，并引入与学习模型同步的动态参考模型。惩罚重构通过一阶模型更新和 loss 计算建立这种联系，不需要经典<a href="https://proceedings.mlr.press/v70/koh17a.html" rel="external nofollow noopener" target="_blank">影响函数（influence functions）</a>涉及的逆 Hessian 计算。参考模型定期从代理模型刷新，再利用目标信息更新，使比较始终与当前学习模型保持联系，而不是依赖固定的预训练参考模型。方法之间的关系见<a href="https://arxiv.org/html/2606.18650#S2.SS3" rel="external nofollow noopener" target="_blank">第 2.3 节</a>。在<a href="https://arxiv.org/html/2606.18650#A1" rel="external nofollow noopener" target="_blank">附录 A</a>给定的假设和参数选择下，论文分析的全坐标更新流程也具有一阶平稳性保证。</p> </div> <p>TANDEM 和 BLADE 使用相同的代理模型与参考模型构造，更新数据获得的训练机会。不同约束把更新分别变成领域比例和 Top-$k$ token 掩码。loss 差更新由目标、代理模型和参考模型的学习状态共同决定。这些状态反映了学习过程，以及训练样本共同作用的结果，包括它们的学习信号如何重叠、如何互补。这也具体体现了<a href="/blog/2026/what-makes-data-good-zh/">第二篇</a>的视角：筛选准则通过学习模型和目标评价数据，而不是为每个领域或 token 赋予一个固有的质量分数。</p> <h2 id="section-2">合成：当重新分配还不够时</h2> <p>数据配比与筛选都假设，有用的训练材料已经存在于数据池的某个地方。如果不存在呢？无论怎么筛选，也无法从池中找出本来就没有的工具使用示例、失败恢复模式或推理策略。合成让样本本身也成为决策的一部分。</p> <p>与配比和筛选一样，合成的效果也由模型在生成数据上训练后的目标表现来评价。分布层面的目标没有改变，改变的是参数化方式。令 $\psi$ 控制生成器、提示词或任务描述，并由此确定训练分布 $q_\psi$。用 $\theta^*(\psi)$ 表示在 $q_\psi$ 上训练得到的模型，问题就变成</p> \[\min_{\psi\in\Psi} \mathcal L_{\mathrm{target}}\!\left(\theta^*(\psi)\right) \quad\text{s.t.}\quad \theta^*(\psi)\in\arg\min_\theta \mathbb E_{x\sim q_\psi}[\ell(x;\theta)].\] <p>允许使用的生成参数集合 $\Psi$ 与生成预算，共同定义了可得到的分布集合 $\mathcal Q_{\mathrm{synth}}={q_\psi:\psi\in\Psi}$。生成既可以引入缺失的数据模式，也可以在已有模式中补充更多样本。</p> <p>对于配比与筛选，训练 loss 与分配权重之间的线性关系，带来了简洁的 loss 差更新。当决策改变的是生成样本本身时，能否得到同样简洁高效的更新，是把这套求解方法扩展到合成时尚待解决的问题。</p> <p>配比、筛选与合成也可以在一个由目标驱动的数据流程中共同使用。我在实践中采用过这样的循环：</p> <blockquote> <p>目标上的失败 → 识别缺少的训练材料 → 生成候选数据 → 筛选或验证 → 训练模型 → 在目标上评价。</p> </blockquote> <p>在这个循环中，LLM 负责生成候选数据，再由目标引导的筛选决定保留什么，从而绕开了直接求解双层生成问题的需要。</p> <h2 id="section-3">目标、差距与操作方式</h2> <p>这三篇文章依次讨论了：<strong>我们获得的是哪一种提升</strong>，<strong>什么让一个训练分布有价值</strong>，以及<strong>实践中可以如何改变它</strong>。</p> <p>面对一个新的数据问题，首先要问的是：我们关心什么目标？普通训练在哪些地方还做得不够？现有数据中是否包含能够提供帮助的材料？这些答案会引导我们选择操作方式，并决定如何优化。</p> <p>也可以用三句话概括：</p> <blockquote> <p><strong>目标定义优化方向。</strong><br> <strong>差距决定改善空间。</strong><br> <strong>操作方式界定能够实现的改善。</strong></p> </blockquote> <p>把这三者放在一起明确下来，才是训练数据设计的起点。</p> <footer class="essay-footer"> <section class="essay-citation" aria-label="引用本文"> <p class="essay-citation__label">引用本文</p> <pre class="essay-citation__paper"><code>@misc{wang2026targettooperatorzh,
+  title  = {从目标到操作：数据配比、筛选与合成},
+  author = {Wang, Jiaxing},
+  year   = {2026},
+  url    = {https://jiaxingwang10.github.io/blog/2026/from-target-to-operator-zh/},
+  note   = {语言模型的训练数据设计, Part 3}
+}</code></pre> </section> <nav class="essay-navigation" aria-label="系列文章导航"> <a class="essay-navigation__item essay-navigation__item--previous" href="/blog/2026/what-makes-data-good/" rel="prev"> <span class="essay-navigation__label">← 上一篇（英文） · 第 2 篇</span> <span class="essay-navigation__title">What Makes Training Data Good? Quality, Diversity, and the Missing Target</span> </a> </nav> </footer> <style>
+  .essay-footer {
+    margin-top: 3rem;
+  }
+  .essay-citation__label {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  .essay-citation__paper {
+    padding: clamp(1rem, 3vw, 1.75rem);
+    border: 1px solid #e3dfd5;
+    border-radius: 0;
+    background: #faf9f6;
+    color: #33312e;
+    box-shadow: 0 2px 4px rgba(51, 49, 46, 0.025);
+    font-size: 0.85rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .essay-citation__paper code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+  }
+  .essay-navigation {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--global-divider-color);
+  }
+  .essay-navigation__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--global-text-color);
+    text-decoration: none;
+  }
+  .essay-navigation__item--next {
+    grid-column: 2;
+    text-align: right;
+  }
+  .essay-navigation__label {
+    color: var(--global-text-color-light);
+    font-size: 0.8rem;
+  }
+  .essay-navigation__title {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .essay-navigation__item:hover,
+  .essay-navigation__item:focus-visible {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+  html[data-theme='dark'] .essay-citation__paper {
+    border-color: #48443c;
+    background: #292824;
+    color: #e6e2d9;
+  }
+  @media (max-width: 575px) {
+    .essay-navigation {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .essay-navigation__item--next {
+      grid-column: 1;
+      text-align: left;
+    }
+  }
+</style> </div> </div> </article> </div> </div> <div class="col-sm-3"> <nav id="toc-sidebar" class="sticky-top toc toc-sidebar" aria-label="Table of contents" data-toc-collapse="expanded" data-toc-collapse-depth=""></nav> </div> </div> </div> <footer class="sticky-bottom mt-5" role="contentinfo"> <div class="container"> © Copyright 2026 Jiaxing Wang. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. </div> </footer> <script>
+  window.alFolio = {
+    compatBootstrap: false
+  };
+</script> <script src="/assets/js/nav-toggle.js?v=141bd79a73ebc0f0b6ea58e440ae79fc"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=e49affc7bd2646f6acdad1dbe02c2359" type="text/javascript"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/al_math/js/mathjax-setup.js"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6" crossorigin="anonymous"></script> <script src="/assets/js/tooltips-setup.js?v=fe487e99db6c43751e6e7bdb2d6a0611"></script> <script defer src="https://cdn.jsdelivr.net/npm/tocbot@4.36.4/dist/tocbot.min.js" integrity="sha256-lo/r+jQ81wWrxdIiiiEEd538z4+dTJTt+leOuAS7GCw=" crossorigin="anonymous"></script> <script src="/assets/js/no_defer.js?v=53b1b1a645525975c963ce8bf8bfefcf"></script> <script defer src="/assets/js/common.js?v=87baac90f765f2f3362dcf6aaf312a8a"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=896d254890d9b47f0281f63bfccf0dee"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script async src="https://www.googletagmanager.com/gtag/js?id=G-L4G9E13T7D"></script> <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    window.dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+  gtag("config", "G-L4G9E13T7D");
+</script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/al_img_tools/js/zoom.js"></script> <script defer src="/assets/js/progress-bar.js?v=499464c5c63ced6cf7ad62509f1e2610" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js" integrity="sha256-uMJJ3EoTyfRBoTbR+lrfu1uRQ87RZG8AR3cVNuQVeFg=" crossorigin="anonymous"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/al_search/js/search/ninja-keys.min.js"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/al_search/js/search-setup.js"></script> <script>
+// get the ninja-keys element
+const ninja = document.querySelector('ninja-keys');
+
+// add the home and posts menu items
+ninja.data = [{
+    id: "nav-about",
+    title: "About",
+    section: "Navigation",
+    handler: () => {
+      window.location.href = "/";
+    },
+  },{id: "nav-blog",
+          title: "Blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "nav-publications",
+          title: "Publications",
+          description: "publications by categories in reversed chronological order. generated by jekyll-scholar.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/publications/";
+          },
+        },{id: "nav-repositories",
+          title: "Repositories",
+          description: "Open-source projects and repositories by Jiaxing Wang.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/repositories/";
+          },
+        },{id: "nav-cv",
+          title: "CV",
+          description: "Curriculum vitae of Jiaxing Wang.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/cv/";
+          },
+        },{id: "post-the-3-5-point-win-that-disappeared-advancement-vs-acceleration",
+        
+          title: "The 3.5-Point Win That Disappeared: Advancement vs. Acceleration",
+        
+        description: "A data recipe can look much better at a fixed budget and still converge to the same model. How can we tell lasting advancement from temporary acceleration?",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/the-3-point-win-that-disappeared/";
+          
+        },
+      },{id: "post-what-makes-training-data-good-quality-diversity-and-the-missing-target",
+        
+          title: "What Makes Training Data Good? Quality, Diversity, and the Missing Target",
+        
+        description: "Quality and diversity are useful words, but incomplete objectives. A target-relative view changes what we score, select, and synthesize.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/what-makes-data-good/";
+          
+        },
+      },{id: "post-from-target-to-operator-mixture-selection-and-synthesis",
+        
+          title: "From Target to Operator: Mixture, Selection, and Synthesis",
+        
+        description: "How mixture and selection turn a shared bilevel objective into practical allocation rules—and what changes when we generate the data itself.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/from-target-to-operator/";
+          
+        },
+      },{id: "books-the-godfather",
+          title: 'The Godfather',
+          description: "",
+          section: "Books",handler: () => {
+              window.location.href = "/books/the_godfather/";
+            },},{id: "news-our-paper-tandem-bi-level-data-mixture-optimization-with-twin-networks-is-accepted-by-neurips-2025",
+          title: 'Our paper “TANDEM: Bi-Level Data Mixture Optimization with Twin Networks” is accepted by...',
+          description: "",
+          section: "News",},{id: "news-our-paper-the-primacy-of-magnitude-in-low-rank-adaptation-is-accepted-by-neurips-2025-spot-light",
+          title: 'Our paper “The Primacy of Magnitude in Low-Rank Adaptation” is accepted by NeurIPS...',
+          description: "",
+          section: "News",},{id: "news-we-present-jd-oxygen-ai-item-center-oxygen-aiic-v1-an-industrial-scale-llm-vlm-centric-solution-for-item-understanding-management-and-applications",
+          title: 'We present JD Oxygen AI Item Center (Oxygen AIIC) V1, an industrial-scale LLM/VLM-centric...',
+          description: "",
+          section: "News",},{id: "news-our-paper-flowtrain-flow-based-decoupled-training-for-industrial-grade-vision-language-models-and-mixemb-importance-aware-quantization-and-caching-co-design-for-industrial-decentral-ized-embedding-training-are-accepted-by-emnlp-2026-industrial-track",
+          title: 'Our paper “FlowTrain: Flow-Based Decoupled Training for Industrial-Grade Vision-Language Models” and “MixEmb: Importance-Aware...',
+          description: "",
+          section: "News",},{id: "news-our-papers-blade-scalable-bi-level-adaptive-data-selection-for-llm-training-and-the-hidden-power-of-scaling-factor-in-lora-optimization-are-accepted-by-neurips-2026",
+          title: 'Our papers “BLADE: Scalable Bi-level Adaptive Data Selection for LLM Training” and “The...',
+          description: "",
+          section: "News",},{id: "projects-project-1",
+          title: 'project 1',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/1_project/";
+            },},{id: "projects-project-2",
+          title: 'project 2',
+          description: "a project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/2_project/";
+            },},{id: "projects-project-3-with-very-long-name",
+          title: 'project 3 with very long name',
+          description: "a project that redirects to another website",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/3_project/";
+            },},{id: "projects-project-4",
+          title: 'project 4',
+          description: "another without an image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/4_project/";
+            },},{id: "projects-project-5",
+          title: 'project 5',
+          description: "a project with a background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/5_project/";
+            },},{id: "projects-project-6",
+          title: 'project 6',
+          description: "a project with no image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/6_project/";
+            },},{id: "projects-project-7",
+          title: 'project 7',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/7_project/";
+            },},{id: "projects-project-8",
+          title: 'project 8',
+          description: "an other project with a background image and giscus comments",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/8_project/";
+            },},{id: "projects-project-9",
+          title: 'project 9',
+          description: "another project with an image 🎉",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/9_project/";
+            },},{id: "teachings-data-science-fundamentals",
+          title: 'Data Science Fundamentals',
+          description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/data-science-fundamentals/";
+            },},{id: "teachings-introduction-to-machine-learning",
+          title: 'Introduction to Machine Learning',
+          description: "This course provides an introduction to machine learning concepts, algorithms, and applications. Students will learn about supervised and unsupervised learning, model evaluation, and practical implementations.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-to-machine-learning/";
+            },},{
+        id: 'social-email',
+        title: 'email',
+        section: 'Socials',
+        handler: () => {
+          window.open("mailto:%77%6A%69%61%78%69%6E%67%39%34@%67%6D%61%69%6C.%63%6F%6D", "_blank");
+        },
+      },{
+        id: 'social-github',
+        title: 'GitHub',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://github.com/jiaxingwang10", "_blank");
+        },
+      },{
+        id: 'social-linkedin',
+        title: 'LinkedIn',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.linkedin.com/in/jiaxing-wang-bb289b3a5", "_blank");
+        },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=EHGfstcAAAAJ", "_blank");
+        },
+      },{
+        id: 'social-rss',
+        title: 'RSS Feed',
+        section: 'Socials',
+        handler: () => {
+          window.open("/feed.xml", "_blank");
+        },
+      },];
+
+</script> <script src="/assets/al_search/js/shortcut-key.js"></script> </body> </html>
