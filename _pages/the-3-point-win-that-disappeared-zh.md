@@ -36,7 +36,7 @@ _styles: |
 
 > **语言模型的训练数据设计 · 三篇系列之一**<br>
 > *什么时候值得优化，什么是好数据，以及如何改变数据。*<br>
-> **加速与终点改善** · [什么是好数据？（英文）]({{ '/blog/2026/what-makes-data-good/' | relative_url }}) · [从目标到操作（英文）]({{ '/blog/2026/from-target-to-operator/' | relative_url }})
+> **加速与终点改善** · [什么是好的训练数据？]({{ '/blog/2026/what-makes-data-good-zh/' | relative_url }}) · [从目标到操作（英文）]({{ '/blog/2026/from-target-to-operator/' | relative_url }})
 
 我们一直在尝试通过优化训练数据的配比来提升语言模型的能力。想法很直接：如果能更合理地把 token 预算分配到不同领域，是不是就能训练出更好的模型？
 
@@ -263,7 +263,7 @@ Selection 提供了另一组对照。我们固定模型、5B-token 的 [OpenWebM
 
 用更少计算达到相同能力，以及改善可达到的终点，都有价值。它们回答不同的问题，也需要不同的验证。无论是哪一种，改变数据的价值都取决于目标。这又引出一个问题：在说明希望模型学会什么之前，我们能否把训练数据称为“高质量”？
 
-这是[下一篇：什么是好数据？（英文）]({{ '/blog/2026/what-makes-data-good/' | relative_url }})要讨论的问题。
+这是[下一篇：什么是好的训练数据？]({{ '/blog/2026/what-makes-data-good-zh/' | relative_url }})要讨论的问题。
 
 {% include essay-footer.liquid citation_key='wang2026advancementzh' %}
 

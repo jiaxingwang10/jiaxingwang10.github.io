@@ -8,6 +8,8 @@ categories: research
 series: designing-what-models-learn
 series_title: "Designing Training Data for Language Models"
 series_order: 2
+lang: en
+translation_url: /blog/2026/what-makes-data-good-zh/
 giscus_comments: false
 related_posts: false
 toc:
@@ -15,6 +17,8 @@ toc:
 ---
 
 <!-- Add the Advancement paper/arXiv link after it becomes public. -->
+
+{% include essay-language-switch.liquid %}
 
 > **Designing Training Data for Language Models · Part 2 of 3**<br>
 > *When to optimize, what makes data good, and how to change it.*<br>
