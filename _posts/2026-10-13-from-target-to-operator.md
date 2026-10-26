@@ -8,6 +8,8 @@ categories: research
 series: designing-what-models-learn
 series_title: "Designing Training Data for Language Models"
 series_order: 3
+lang: en
+translation_url: /blog/2026/from-target-to-operator-zh/
 giscus_comments: false
 related_posts: false
 toc:
@@ -15,6 +17,8 @@ toc:
 ---
 
 <!-- Notation: q=training distribution, theta=model, w=mixture/selection allocation, psi=generation parameters, K=domains, P=candidate units, f=keep ratio. -->
+
+{% include essay-language-switch.liquid %}
 
 > **Designing Training Data for Language Models · Part 3 of 3**<br>
 > *When to optimize, what makes data good, and how to change it.*<br>
