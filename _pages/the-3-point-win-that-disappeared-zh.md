@@ -1,6 +1,6 @@
 ---
 layout: post
-published: false
+published: true
 title: "消失的 3.5 点优势：数据优化是在加速，还是在改善终点？"
 permalink: /blog/2026/the-3-point-win-that-disappeared-zh/
 date: 2026-10-13 12:00:00 +0800
@@ -31,6 +31,8 @@ _styles: |
 {% include essay-language-switch.liquid %}
 
 <div class="essay-chinese" lang="zh-CN" markdown="1">
+
+本文为[英文原文]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }})的中文版本，由 ChatGPT 辅助翻译。
 
 > **语言模型的训练数据设计 · 三篇系列之一**<br>
 > *什么时候值得优化，什么是好数据，以及如何改变数据。*<br>

@@ -9,6 +9,7 @@ series: designing-what-models-learn
 series_title: "Designing Training Data for Language Models"
 series_order: 1
 lang: en
+translation_url: /blog/2026/the-3-point-win-that-disappeared-zh/
 giscus_comments: false
 related_posts: false
 toc:
