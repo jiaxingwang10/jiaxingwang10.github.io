@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "What Makes Data Good?"
+title: "What Makes Training Data Good? Quality, Diversity, and the Missing Target"
 date: 2026-10-13 11:00:00 +0800
 description: "Quality and diversity are useful words, but incomplete objectives. A target-relative view changes what we score, select, and synthesize."
 tags: llm data-curation data-quality diversity distribution-design
@@ -16,11 +16,9 @@ toc:
 
 <!-- Add the Advancement paper/arXiv link after it becomes public. -->
 
-<p class="lead text-muted">Quality, Diversity, and the Missing Target</p>
-
 > **Designing Training Data for Language Models · Part 2 of 3**<br>
 > *When to optimize, what makes data good, and how to change it.*<br>
-> [Advancement vs. Acceleration]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}) · **What Makes Data Good?** · [From Target to Operator]({{ '/blog/2026/from-target-to-operator/' | relative_url }})
+> [Advancement vs. Acceleration]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}) · **What Makes Training Data Good?** · [From Target to Operator]({{ '/blog/2026/from-target-to-operator/' | relative_url }})
 
 Imagine two training examples.
 

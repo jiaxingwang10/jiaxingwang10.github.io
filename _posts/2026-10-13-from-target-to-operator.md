@@ -18,7 +18,7 @@ toc:
 
 > **Designing Training Data for Language Models · Part 3 of 3**<br>
 > *When to optimize, what makes data good, and how to change it.*<br>
-> [Advancement vs. Acceleration]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}) · [What Makes Data Good?]({{ '/blog/2026/what-makes-data-good/' | relative_url }}) · **From Target to Operator**
+> [Advancement vs. Acceleration]({{ '/blog/2026/the-3-point-win-that-disappeared/' | relative_url }}) · [What Makes Training Data Good?]({{ '/blog/2026/what-makes-data-good/' | relative_url }}) · **From Target to Operator**
 
 Suppose we want a language model to perform better on a target—a domain, a task, or a set of capabilities—and can change the data it trains on. Which changes should we make?
 

@@ -21,7 +21,7 @@ toc:
 
 > **Designing Training Data for Language Models · Part 1 of 3**<br>
 > *When to optimize, what makes data good, and how to change it.*<br>
-> **Advancement vs. Acceleration** · [What Makes Data Good?]({{ '/blog/2026/what-makes-data-good/' | relative_url }}) · [From Target to Operator]({{ '/blog/2026/from-target-to-operator/' | relative_url }})
+> **Advancement vs. Acceleration** · [What Makes Training Data Good?]({{ '/blog/2026/what-makes-data-good/' | relative_url }}) · [From Target to Operator]({{ '/blog/2026/from-target-to-operator/' | relative_url }})
 
 We had been trying to improve a language model's capability by optimizing its training-data mixture. The hope was simple: if we allocated the token budget more intelligently across domains, perhaps the resulting model would become genuinely better.
 
