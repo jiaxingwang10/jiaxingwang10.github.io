@@ -16,8 +16,6 @@ toc:
   sidebar: right
 ---
 
-<!-- Add the Advancement paper/arXiv link after it becomes public. -->
-
 {% include essay-language-switch.liquid %}
 
 > **Designing Training Data for Language Models · Part 1 of 3**<br>
@@ -144,9 +142,7 @@ This is the population picture behind abundant, single-pass training when traini
 The seven-domain SlimPajama experiment above uses equal target weights, $\widehat w_k=1/K=1/7$. Its uniform baseline therefore has $w_{0,k}=\widehat w_k$. When training and evaluation sample the same underlying distribution within each domain, this baseline already minimizes the target objective at the population endpoint. The early gains in those learning curves are therefore consistent with acceleration. This remains true even when some domains are harder to learn than others. Giving harder domains more weight may help at finite budgets, but difficulty differences alone do not create room for a better endpoint when the baseline already matches the target.
 </div>
 
-These results are developed in our forthcoming paper, **Advancement or Acceleration? How Data Curation Improves LLM Training**.
-
-<!-- Add the public arXiv link to the paper title above once available. -->
+These results are developed in our paper, **[Advancement or Acceleration? How Data Curation Improves LLM Training](https://arxiv.org/abs/2610.36983)**.
 
 > **Lasting advancement requires a correctable train–target gap.**
 

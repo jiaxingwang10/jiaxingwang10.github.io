@@ -160,9 +160,7 @@ $$
 开头的七领域 SlimPajama 实验采用均匀的目标权重，$\widehat w_k=1/K=1/7$。均匀配比基线因此满足 $w_{0,k}=\widehat w_k$。在各领域内训练与评价来自相同底层分布的条件下，这个基线在总体终点上已经最优；学习曲线早期的领先则可以由加速解释。即使不同领域的学习难度不同，这一点也不会改变：给困难领域更多权重，可能改善有限预算下的表现，但难度差异本身并不会在已匹配的目标上创造更好的终点。
 </div>
 
-这些结果将在我们的论文 **Advancement or Acceleration? How Data Curation Improves LLM Training** 中展开。
-
-<!-- Add the public arXiv link to the paper title above once available. -->
+这些结果在我们的论文 **[Advancement or Acceleration? How Data Curation Improves LLM Training](https://arxiv.org/abs/2610.36983)** 中详细讨论。
 
 > **持续的终点改善，需要可纠正的训练—目标差距（train–target gap）。**
 

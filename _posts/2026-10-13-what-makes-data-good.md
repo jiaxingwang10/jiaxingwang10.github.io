@@ -16,8 +16,6 @@ toc:
   sidebar: right
 ---
 
-<!-- Add the Advancement paper/arXiv link after it becomes public. -->
-
 {% include essay-language-switch.liquid %}
 
 > **Designing Training Data for Language Models · Part 2 of 3**<br>
