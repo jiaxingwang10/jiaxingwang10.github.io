@@ -125,7 +125,7 @@ latest_posts:
 </div>
 I am currently a researcher at JD.com. I obtained my Ph.D. degree from [National Laboratory of Pattern Recognition](https://nlpr.ia.ac.cn/) from [CASIA](https://ia.cas.cn), supervised by [Prof. Jian Cheng](https://clab.ia.ac.cn/en), and the B.Eng. Degree from North China Electric Power University.
 
-My research focuses on how training data shapes what models learn, and how to make learning more efficient. I study data mixture optimization, selection, and synthesis, with an emphasis on connecting target-driven objectives to practical training algorithms. This work provides a foundation for self-evolving AI systems, where feedback from model failures guides iterative improvements to training data and model capabilities.
+My research focuses on how training data shapes what models learn, and how to make learning more efficient. I study when changing training data helps models learn faster or achieve better performance, what makes data useful for a target, and how to turn these insights into practical methods for data mixture optimization, selection, and synthesis. This work also informs my interest in self-evolving AI systems, where feedback from model failures guides improvements to training data and model capabilities.
 
 At JD Retail, I have deployed a data flywheel for product understanding that connects target evaluation, data generation and selection, and model training. My work also includes systems for efficient training and inference.
 
