@@ -78,15 +78,15 @@ $$
 如果
 
 $$
-\mathcal E_\infty(w)<\mathcal E_\infty(w_0),
+\mathcal E_\infty(w)<\mathcal E_\infty^{\mathrm{base}},
 $$
 
-我们说策略 $w$ 带来了**终点改善**。其中，$w_0$ 表示未经数据优化的基线策略。
+我们说策略 $w$ 带来了**终点改善**。这里，$\mathcal E_\infty^{\mathrm{base}}$ 是未经数据优化的基线终点；下文用 $\alpha_{\mathrm{base}}(\varepsilon)$ 表示基线达到性能 $\varepsilon$ 所需的预算。
 
 对于某个目标性能水平 $\varepsilon$，用 $\alpha_w(\varepsilon)$ 表示策略 $w$ 达到它所需的最小预算。如果
 
 $$
-\alpha_w(\varepsilon)<\alpha_{w_0}(\varepsilon),
+\alpha_w(\varepsilon)<\alpha_{\mathrm{base}}(\varepsilon),
 $$
 
 我们说它带来了**加速**。
@@ -109,32 +109,32 @@ $$
 
 ### 一个很短的证明
 
-令 $w_0$ 表示基线策略。关键假设是：训练与目标**在总体分布层面没有差距**，即
+在这个证明中，将 $w$ 固定为基线策略。关键假设是：训练与目标**在总体分布层面没有差距**，即
 
 $$
-\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w_0)
+\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w)
 =
 \mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta)
 \qquad \text{for every }\theta.
 $$
 
-这里的“一致”，是指固定 $w_0$ 后，训练 loss 和目标 loss 是关于 $\theta$ 的同一个函数，而不只是在某个训练检查点上数值相等。上标 $\mathrm{pop}$ 表示总体风险（population loss），也就是对底层数据分布取期望。在理想化的大数据极限 $\alpha\to\infty$ 下，收敛后的训练求解的是这个目标。
+这里的“一致”，是指固定 $w$ 后，训练 loss 和目标 loss 是关于 $\theta$ 的同一个函数，而不只是在某个训练检查点上数值相等。上标 $\mathrm{pop}$ 表示总体风险（population loss），也就是对底层数据分布取期望。在理想化的大数据极限 $\alpha\to\infty$ 下，收敛后的训练求解的是这个目标。
 
 当内层优化收敛时，基线解
 
 $$
-\theta^*(w_0)\in\arg\min_\theta
-\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w_0)
+\theta_{\mathrm{base}}\in\arg\min_\theta
+\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w)
 $$
 
-也全局最小化了目标 loss——因为在 $w_0$ 下，训练 loss 和目标 loss 本来就是同一个函数。对于其他数据策略 $w$，训练得到的 $\theta^*(w)$ 也仍然只是同一模型类中的另一个模型。因此
+也全局最小化了目标 loss——因为在 $w$ 下，训练 loss 和目标 loss 本来就是同一个函数。采用其他数据策略训练得到的 $\theta'$，也仍然只是同一模型类中的另一个模型。因此
 
 $$
-\mathcal L_{\mathrm{target}}^{\mathrm{pop}}\!\left(\theta^*(w_0)\right)
+\mathcal L_{\mathrm{target}}^{\mathrm{pop}}\!\left(\theta_{\mathrm{base}}\right)
 =
 \min_\theta \mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta)
 \leq
-\mathcal L_{\mathrm{target}}^{\mathrm{pop}}\!\left(\theta^*(w)\right).
+\mathcal L_{\mathrm{target}}^{\mathrm{pop}}\!\left(\theta'\right).
 $$
 
 约束就在这里：**当基线已经最小化目标总体风险时，重新分配数据不可能得到严格更好的目标终点。** 这个结论以模型类固定、内层优化达到上述最小值为前提。
@@ -153,11 +153,11 @@ $$
 \end{aligned}
 $$
 
-我们优化的是训练配比 $w$。如果每个领域内训练与目标的数据分布相同，而且 $w_0=\widehat w$，两个总体目标就完全一致，对应上面的无差距条件。
+我们优化的是训练配比 $w$。如果每个领域内训练与目标的数据分布相同，而且 $w=\widehat w$，两个总体目标就完全一致，对应上面的无差距条件。
 
 当训练与评价数据从同一底层分布独立同分布采样时，数据越充足，经验目标就越接近同一个期望 loss。因此，当训练与评价来自同一分布时，数据充足、单遍训练的设置可以接近上面讨论的理想情形。
 
-开头的七领域 SlimPajama 实验采用均匀的目标权重，$\widehat w_k=1/K=1/7$。均匀配比基线因此满足 $w_{0,k}=\widehat w_k$。在各领域内训练与评价来自相同底层分布的条件下，这个基线在总体终点上已经最优；学习曲线早期的领先则可以由加速解释。即使不同领域的学习难度不同，这一点也不会改变：给困难领域更多权重，可能改善有限预算下的表现，但难度差异本身并不会在已匹配的目标上创造更好的终点。
+开头的七领域 SlimPajama 实验采用均匀的目标权重，$\widehat w_k=1/K=1/7$。均匀配比基线因此满足 $w_k=\widehat w_k$。在各领域内训练与评价来自相同底层分布的条件下，这个基线在总体终点上已经最优；学习曲线早期的领先则可以由加速解释。即使不同领域的学习难度不同，这一点也不会改变：给困难领域更多权重，可能改善有限预算下的表现，但难度差异本身并不会在已匹配的目标上创造更好的终点。
 </div>
 
 这些结果在我们的论文 **[Advancement or Acceleration? How Data Curation Improves LLM Training](https://arxiv.org/abs/2610.36983)** 中详细讨论。
@@ -182,67 +182,79 @@ $$
 
 ## 昂贵搜索之前，先做一次诊断
 
-总体分布层面的条件很清楚，但通常无法在真实语料上直接检验。因此，我们使用 **$\Delta$-test**，从一次普通的、未经数据优化的基线训练中得到可观测的诊断信号。用 $\theta$ 表示这次训练的一个模型检查点，无需等到训练收敛。
+总体分布层面的条件很清楚，但通常无法在真实语料上直接检验。因此，我们使用 **$\Delta$ 诊断量**，从一次普通的、未经数据优化的基线训练中得到可观测的信号。用 $\theta$ 表示这次训练的一个检查点，无需等到训练收敛。
 
-对于 $K$ 个领域的数据配比，定义
+首先，将 $J$ 个目标分量中的每个 $j$ 与对应的一组训练领域 $S_j$ 匹配，每个训练领域恰好属于一个组。令 $\widehat w_j$ 表示目标权重，$w_k$ 表示基线训练比例，定义带符号的差异
+
+$$
+d_j(\theta)
+=
+\widehat w_j\mathcal L_{\mathrm{target}}^j(\theta)
+-
+\sum_{k\in S_j}w_k\mathcal L_{\mathrm{train}}^k(\theta).
+$$
+
+**如何分组取决于任务。** 如果训练与目标的领域一一对应（paired，$J=K$），则 $S_j=\{j\}$。如果目标是候选池中没有对应项的留出领域（unpaired），则只设一个目标分量，并把所有训练领域放入同一组：$J=1$，$S_1=\{1,\ldots,K\}$。此时比较的是留出目标的 loss 与基线加权训练 loss。
+
+**还需要校正数据本身的难度。** 原始 loss 差异也包含数据内在熵的差异，尤其是在训练与目标不配对时。因此，我们在**相同文档**上，用参考模型 $\theta_{\mathrm{ref}}$ 测量同样的带符号差异，先扣除参考值，再取绝对值：
 
 $$
 \Delta
 =
-\sum_{k=1}^{K}
+\sum_{j=1}^{J}
+\left|d_j(\theta)-d_j(\theta_{\mathrm{ref}})\right|.
+$$
+
+参考模型应能反映数据的内在难度，且没有在基线所用的训练数据上训练过。
+
+筛选是单一候选池的特例，$K=J=1$，基线对应全部保留：
+
+$$
+\Delta
+=
 \left|
-\widehat w_k\mathcal L_{\mathrm{target}}^k\!\left(\theta\right)
+\bigl[\mathcal L_{\mathrm{target}}(\theta)-\mathcal L_{\mathrm{train}}(\theta)\bigr]
 -
-w_{0,k}\mathcal L_{\mathrm{train}}^k\!\left(\theta\right)
+\bigl[\mathcal L_{\mathrm{target}}(\theta_{\mathrm{ref}})-\mathcal L_{\mathrm{train}}(\theta_{\mathrm{ref}})\bigr]
 \right|.
 $$
 
-其中，$\widehat w_k$ 是领域 $k$ 在目标分布中的权重，$w_{0,k}$ 是它在基线训练中的比例。
+这里，训练 loss 在基线已经见过的样本上测量，以便诊断重复曝光造成的 gap。
 
-对于 selection，候选数据来自单一数据池，诊断量简化为
+我们在每一类实验中，使用目标来自训练分布留出数据的无 gap 对照来校准 $\Delta$。当 $\Delta>\mu_{\mathrm{null}}+3\sigma_{\mathrm{null}}$ 时，称其显著非零；这里的均值与标准差来自独立训练的基线。数值尺度取决于模型、分词器和数据，因此不存在通用的原始数值阈值。
 
-$$
-\Delta
-=
-\left|
-\mathcal L_{\mathrm{target}}\!\left(\theta\right)
--
-\mathcal L_{\mathrm{train}}\!\left(\theta\right)
-\right|,
-$$
-
-这里基线策略 $w_0$ 对应全部保留。
-
-在我们的实验中，$\Delta$-test 是一个有用的早期信号：较大的值往往出现在数据优化收益能够持续的设置中，而 $\Delta$ 接近零时，早期收益往往会随预算增加而消退。接近零提示改善空间可能有限，但不能排除所有训练—目标差距。另一方面，$\Delta$ 非零也不是终点改善的充分条件：能否纠正检测到的 gap，仍取决于现有数据和可用的数据策略。
+这一诊断量提示的是终点改善的**可能性**。非零不能保证现有数据和策略能够纠正差距；反过来，标量 loss 也可能遗漏分布差异，因此接近零并不能证明没有 gap。
 
 ## 改变 gap，观察同一批方法的表现
 
-我们在配比和筛选实验中检验两个问题：数据优化的收益是否取决于训练—目标差距？$\Delta$-test 能否在昂贵搜索之前识别值得尝试的任务？为此，我们改变 gap，同时让方法和训练设置尽量保持一致。
+我们在配比和筛选实验中检验两个问题：数据优化的收益是否取决于训练—目标差距？$\Delta$ 诊断量能否在昂贵搜索之前识别值得尝试的任务？为此，我们改变 gap，同时让方法和训练设置尽量保持一致。
 
-下面的实验只追踪**已测试训练预算内**的收益；无限数据下的结论来自前面的理论分析。报告的 $\Delta$ 都在基线训练预算过半时测量，而不是等训练完全收敛。实际使用时，也可以先用小型代理模型诊断，再决定是否进行更大规模的实验，降低额外计算成本。
+下面的实验只追踪**已测试训练预算内**的收益；无限数据下的结论来自前面的理论分析。报告的 $\Delta$ 都在基线训练预算过半时测量，而不是等训练完全收敛。实际使用时，也可以先用小型代理模型诊断，再决定是否进行更大规模的实验，降低额外计算成本。新版配比实验中，外生 gap 在训练预算的 5% 处就已清晰可见，内生 gap 在约 10% 处已与无 gap 对照明显分离；所需的检查点仍可能因任务而异。
 
 对于配比，我们比较了 Uniform，以及 [Skill-It](https://arxiv.org/abs/2307.14430)、[RegMix](https://arxiv.org/abs/2407.01492)、[Aioli](https://arxiv.org/abs/2411.05735)、[DoGE](https://arxiv.org/abs/2310.15393) 和 [TANDEM](https://openreview.net/pdf?id=szBFUtBzWP)：
 
-- **近乎匹配的场景（matched regime，$\Delta=0.07$）。** 这就是开头的七领域 SlimPajama 实验。训练与目标都对七个领域均匀加权，数据池足够大，不会因小领域耗尽而反复采样。最终平均困惑度在 19.66 到 20.17 之间，与 Uniform 的 19.71 相比，差异处于实验波动范围内。到了最后一个训练检查点，早期领先已不再可靠。
-- **内生 gap（endogenous gap，$\Delta=0.64$）。** 保持相同的均匀目标权重，但把数据池限制为 300M tokens，并保留原有领域比例。ArXiv、Wikipedia 等小领域很快耗尽，随后被反复采样。过拟合使这些领域的训练 loss 相对于留出目标 loss 更低。之所以叫“内生”，是因为 gap 来自有限数据上的训练过程。优化配比通过减少对这些过拟合领域的采样，改善了表现。
-- **外生 gap（exogenous gap，$\Delta=1.26$）。** 把 CommonCrawl 留作目标，只在其余六个领域上训练。之所以叫“外生”，是因为候选训练池与目标本来就来自不同分布。虽然目标领域不在训练池中，C4 等相关数据仍提供了通过重新加权来部分纠正差距的可能。优化后，目标困惑度从 Uniform 的 49.19 降到约 40–41。
+- **近乎匹配的场景（matched regime，$\Delta=0.076$）。** 这就是开头的七领域 SlimPajama 实验。训练与目标都对七个领域均匀加权，数据池足够大，不会因小领域耗尽而反复采样。最终平均困惑度在 19.66 到 20.17 之间，与 Uniform 的 19.71 相比，差异处于实验波动范围内。到了最后一个训练检查点，早期领先已不再可靠。
+- **内生 gap（endogenous gap，$\Delta=0.649$）。** 保持相同的均匀目标权重，但把数据池限制为 300M tokens，并保留原有领域比例。ArXiv、Wikipedia 等小领域很快耗尽，随后被反复采样。过拟合使这些领域的训练 loss 相对于留出目标 loss 更低。之所以叫“内生”，是因为 gap 来自有限数据上的训练过程。优化配比通过减少对这些过拟合领域的采样，改善了表现。
+- **外生 gap（exogenous gap，$\Delta=0.468$）。** 把 CommonCrawl 留作目标，只在其余六个领域上训练。之所以叫“外生”，是因为候选训练池与目标本来就来自不同分布。虽然目标领域不在训练池中，C4 等相关数据仍提供了通过重新加权来部分纠正差距的可能。优化后，目标困惑度从 Uniform 的 49.19 降到 40.17–41.08。
 
 {% include figure.liquid loading="eager" path="assets/img/blog/data-curation/mixture-gap-results.png" class="img-fluid rounded z-depth-1" zoomable=true %}
 
-*同一批配比方法，在近乎匹配的场景中，到最后一个训练检查点 时收益很小；在存在可纠正 gap 的场景中，收益则保持到了测试过的最大预算。*
+*同一批配比方法，在近乎匹配的场景中，到最后一个训练检查点时收益很小；在存在可纠正 gap 的场景中，收益则保持到了测试过的最大预算。*
 
 筛选实验提供了另一组对照。我们固定模型、5B-token 的 [OpenWebMath](https://arxiv.org/abs/2310.06786) 候选池、60% 的保留比例，以及训练流程。比较方法包括全量数据持续预训练，以及 Random、[EL2N](https://arxiv.org/abs/2107.07075)、[InfoBatch](https://arxiv.org/abs/2303.04947)、[Token-Cleaning](https://proceedings.mlr.press/v267/pang25a.html)、[RHO-1](https://arxiv.org/abs/2404.07965) 和 [BLADE](https://arxiv.org/abs/2606.18650)。两种设置使用相同的方法，只改变选择和评价所用的目标。
 
 - 目标同样来自 OpenWebMath 时，$\Delta=0.016$，没有一种筛选方法能稳定超过全量数据的持续预训练。
-- 目标换成分布不同的 [MetaMath](https://arxiv.org/abs/2309.12284)–[MAmmoTH](https://arxiv.org/abs/2309.05653) 时，$\Delta=0.549$。RHO-1 和 BLADE 可以利用目标信息，尝试缩小这一差距。其中，BLADE 只保留 60% 的候选 tokens，就把各项基准测试的平均准确率从 17.21 提升到 31.31。
+- 目标换成分布不同的 [MetaMath](https://arxiv.org/abs/2309.12284)–[MAmmoTH](https://arxiv.org/abs/2309.05653) 时，$\Delta=0.158$。RHO-1 和 BLADE 可以利用目标信息，尝试缩小这一差距。RHO-1 和 BLADE 只保留 60% 的候选 tokens，就把各项基准测试的平均准确率从 17.21 分别提升到 27.06 和 31.31。留出目标 loss 也从全量持续预训练的 1.14 分别降至 0.59 和 0.45。
 
 {% include figure.liquid loading="eager" path="assets/img/blog/data-curation/selection-gap-results.png" class="img-fluid rounded z-depth-1" zoomable=true %}
 
-*在近乎匹配的场景中，筛选相比全量持续预训练收益很小；有可纠正的 gap 时，收益则明显增大。$\Delta$-test 可以在筛选之前区分这两种设置。*
+*在近乎匹配的场景中，筛选相比全量持续预训练收益很小；有可纠正的 gap 时，收益则明显增大。$\Delta$ 诊断量可以在筛选之前区分这两种设置。*
+
+新版的目标插值实验进一步检验了改善空间的大小：当目标中 MetaMath–MAmmoTH 的占比从 0 增加到 100% 时，$\Delta$ 从 0.016 增至 0.158，BLADE 相比全量持续预训练的平均准确率增益也在测试设置中从 +0.3 增至 +14.1 个百分点。这是实验中的关联，并不意味着可以把 $\Delta$ 通用地换算成预期收益。
 
 ## 换一种做事顺序
 
-这些结果提示我们：在问“该用哪个数据优化方法”之前，应该先问“这个任务留出了怎样的改善空间”。$\Delta$-test 为这种判断提供了一个实用起点。
+这些结果提示我们：在问“该用哪个数据优化方法”之前，应该先问“这个任务留出了怎样的改善空间”。$\Delta$ 诊断量为这种判断提供了一个实用起点。
 
 常见的流程从方法开始：
 

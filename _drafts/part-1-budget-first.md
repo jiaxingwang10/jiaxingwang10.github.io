@@ -106,36 +106,36 @@ That question also changes how I think about “good data.” Its value depends 
 <details markdown="1">
 <summary>Formal definitions and the population no-gap argument</summary>
 
-Let $\mathcal E_\alpha(w)$ denote target loss under policy $w$ at data budget $\alpha$, with lower values better, and let $w_0$ be the baseline. Define
+Let $\mathcal E_\alpha(w)$ denote target loss under policy $w$ at data budget $\alpha$, with lower values better. The label $\mathrm{base}$ denotes the uncurated baseline. Define
 
 $$
 \mathcal E_\infty(w)=\lim_{\alpha\to\infty}\mathcal E_\alpha(w).
 $$
 
-Advancement means $\mathcal E_\infty(w)<\mathcal E_\infty(w_0)$. For a performance level $\varepsilon$ attainable by both policies, define
+Advancement means $\mathcal E_\infty(w)<\mathcal E_\infty^{\mathrm{base}}$. For a performance level $\varepsilon$ attainable by both policies, define
 
 $$
 \alpha_w(\varepsilon)=\inf\{\alpha:\mathcal E_\alpha(w)\leq\varepsilon\}.
 $$
 
-Acceleration at that level means $\alpha_w(\varepsilon)<\alpha_{w_0}(\varepsilon)$. A policy can provide both effects.
+Acceleration at that level means $\alpha_w(\varepsilon)<\alpha_{\mathrm{base}}(\varepsilon)$. A policy can provide both effects.
 
-The no-gap argument assumes a fixed model class, coincident population objectives for every model parameter vector $\theta$, and a global baseline minimizer:
+For the no-gap argument, fix $w$ to the baseline allocation. The argument assumes a fixed model class, coincident population objectives for every model parameter vector $\theta$, and a global baseline minimizer:
 
 $$
-\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w_0)
+\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w)
 =\mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta),
 \qquad
-\theta^*(w_0)\in\arg\min_\theta
-\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w_0).
+\theta_{\mathrm{base}}\in\arg\min_\theta
+\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w).
 $$
 
-For any model $\theta^*(w)$ produced by another allocation in that class,
+For any model $\theta'$ produced by another allocation in that class,
 
 $$
-\mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta^*(w_0))
+\mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta_{\mathrm{base}})
 \leq
-\mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta^*(w)).
+\mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta').
 $$
 
 This is a statement about the idealized population optimum. Reaching a stationary point in neural-network training does not establish its global-minimization premise. Equal losses at one checkpoint do not establish equality of the objective functions either.
@@ -145,30 +145,49 @@ This is a statement about the idealized population optimum. Reaching a stationar
 <details markdown="1">
 <summary>How we measure Δ</summary>
 
-Let $\theta_{t_\Delta}(w_0)$ be the baseline checkpoint used for diagnosis. We measured Δ at 50% of the baseline training budget, without requiring convergence.
+The population condition is clean but cannot usually be checked directly on real corpora. We therefore use the **$\Delta$-diagnostic** from an ordinary uncurated baseline run. Let $\theta$ denote a checkpoint from that run; training need not have converged.
 
-For mixture over $K$ domains, let $w_{0,k}$ denote baseline exposure and $\widehat w_k$ fixed target importance. Then
+First, match each of the $J$ target components $j$ to a group $S_j$ of training domains. Every training domain belongs to exactly one group. With target weights $\widehat w_j$ and baseline training proportions $w_k$, define the signed discrepancy
 
 $$
-\Delta_{\mathrm{mix}}
-=\sum_{k=1}^K\left|
-\widehat w_k\mathcal L_{\mathrm{target}}^k(\theta_{t_\Delta}(w_0))
--w_{0,k}\mathcal L_{\mathrm{train}}^k(\theta_{t_\Delta}(w_0))
+d_j(\theta)
+=
+\widehat w_j\mathcal L_{\mathrm{target}}^j(\theta)
+-
+\sum_{k\in S_j}w_k\mathcal L_{\mathrm{train}}^k(\theta).
+$$
+
+**The grouping depends on the task.** When training and target domains correspond one to one (*paired*, $J=K$), use $S_j=\{j\}$. For a held-out target domain with no counterpart in the candidate pool (*unpaired*), use one target component and group all training domains together: $J=1$, $S_1=\{1,\ldots,K\}$. This compares the held-out target loss with the baseline's weighted training loss.
+
+**Correct for intrinsic data difficulty.** Raw loss differences also reflect the intrinsic entropy of the data, especially when the target and training sources are unpaired. We subtract the same signed discrepancy measured by a reference model $\theta_{\mathrm{ref}}$ on the **same documents**, then take absolute values:
+
+$$
+\Delta
+=
+\sum_{j=1}^{J}
+\left|d_j(\theta)-d_j(\theta_{\mathrm{ref}})\right|.
+$$
+
+The reference should capture intrinsic data difficulty and must not have been trained on the baseline's training data.
+
+Selection is the single-pool case, $K=J=1$, with full retention as the baseline:
+
+$$
+\Delta
+=
+\left|
+\bigl[\mathcal L_{\mathrm{target}}(\theta)-\mathcal L_{\mathrm{train}}(\theta)\bigr]
+-
+\bigl[\mathcal L_{\mathrm{target}}(\theta_{\mathrm{ref}})-\mathcal L_{\mathrm{train}}(\theta_{\mathrm{ref}})\bigr]
 \right|.
 $$
 
-For selection, the baseline retains the full pool, and
+Here, training loss is measured on examples already seen by the baseline, so the diagnostic can capture gaps caused by repeated exposure.
 
-$$
-\Delta_{\mathrm{sel}}
-=\left|
-\mathcal L_{\mathrm{target}}(\theta_{t_\Delta}(w_0))
--\mathcal L_{\mathrm{train}}(\theta_{t_\Delta}(w_0))
-\right|.
-$$
+We calibrate $\Delta$ against a no-gap control within each experiment family, using held-out target data from the training distribution. An appreciably nonzero value means $\Delta>\mu_{\mathrm{null}}+3\sigma_{\mathrm{null}}$, where the null mean and standard deviation come from independently trained baselines. Its scale depends on the model, tokenizer, and data, so there is no universal raw-value threshold.
 
-Training loss is evaluated on **seen training examples**. A held-out sample from the training source would miss the in-sample fitting effect we want to detect in the repetition-induced setting. Target loss estimates the designated target distribution; target data used to guide curation must be distinguished from independent final evaluation data.
+The diagnostic signals **potential** for advancement. A nonzero value does not guarantee that the available data and policy can correct the mismatch. Conversely, scalar losses can miss distributional differences, so a near-zero value is not proof that no gap exists.
 
-In the mixture experiments, Δ was 0.07 in the matched setting, 0.64 with a restricted corpus, and 1.26 with the held-out CommonCrawl target. These values describe the studied settings; they do not define a universal threshold or a calibrated prediction of gain. Distinct distributions can give similar losses, and finite-sample variation can produce a nonzero diagnostic.
+In the mixture experiments, $\Delta$ was 0.076 in the matched setting, 0.649 with a restricted corpus, and 0.468 with the held-out CommonCrawl target. For selection, it was 0.016 with the OpenWebMath target and 0.158 with the shifted MetaMath–MAmmoTH target. These reported values are measured at half the baseline training budget.
 
 </details>

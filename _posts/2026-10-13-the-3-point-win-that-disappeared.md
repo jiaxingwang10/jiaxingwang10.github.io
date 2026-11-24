@@ -62,15 +62,15 @@ $$
 A policy provides **advancement** if
 
 $$
-\mathcal E_\infty(w)<\mathcal E_\infty(w_0),
+\mathcal E_\infty(w)<\mathcal E_\infty^{\mathrm{base}},
 $$
 
-where $w_0$ indicates the uncurated baseline.
+Here $\mathcal E_\infty^{\mathrm{base}}$ is the endpoint of the uncurated baseline; below, $\alpha_{\mathrm{base}}(\varepsilon)$ is its budget to reach performance $\varepsilon$.
 
 For a target performance level $\varepsilon$, let $\alpha_w(\varepsilon)$ be the smallest budget needed to reach it. The policy provides **acceleration** if
 
 $$
-\alpha_w(\varepsilon)<\alpha_{w_0}(\varepsilon).
+\alpha_w(\varepsilon)<\alpha_{\mathrm{base}}(\varepsilon).
 $$
 
 Acceleration changes the road: the same performance is reached with less data. Advancement changes the destination: the endpoint itself improves. A single checkpoint cannot distinguish the two.
@@ -91,32 +91,32 @@ The inner problem optimizes the model parameters $\theta$. The outer problem opt
 
 ### The one-line obstruction
 
-Let $w_0$ denote the uncurated baseline and suppose, crucially, that there is no train–target gap **at the population level**:
+Fix $w$ to the uncurated baseline policy and suppose, crucially, that there is no train–target gap **at the population level**:
 
 $$
-\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w_0)
+\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w)
 =
 \mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta)
 \qquad \text{for every }\theta.
 $$
 
-“Matches” means that, under the baseline policy $w_0$, training and target losses are the same function of $\theta$—not just equal at one checkpoint. These are population losses: expectations over the underlying data distributions. In the idealized large-data limit $\alpha\to\infty$, converged training minimizes this objective.
+“Matches” means that, under the baseline policy $w$, training and target losses are the same function of $\theta$—not just equal at one checkpoint. These are population losses: expectations over the underlying data distributions. In the idealized large-data limit $\alpha\to\infty$, converged training minimizes this objective.
 
 When the inner optimization converges, the baseline solution
 
 $$
-\theta^*(w_0)\in\arg\min_\theta
-\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w_0)
+\theta_{\mathrm{base}}\in\arg\min_\theta
+\mathcal L_{\mathrm{train}}^{\mathrm{pop}}(\theta;w)
 $$
 
-also globally minimizes the target objective—because, under $w_0$, the training and target losses are the same function. For any alternative curation policy $w$, its trained solution $\theta^*(w)$ is still another model in the same hypothesis class. Therefore
+also globally minimizes the target objective—because, under $w$, the training and target losses are the same function. Any model $\theta'$ trained under an alternative policy still belongs to the same hypothesis class. Therefore
 
 $$
-\mathcal L_{\mathrm{target}}^{\mathrm{pop}}\!\left(\theta^*(w_0)\right)
+\mathcal L_{\mathrm{target}}^{\mathrm{pop}}\!\left(\theta_{\mathrm{base}}\right)
 =
 \min_\theta \mathcal L_{\mathrm{target}}^{\mathrm{pop}}(\theta)
 \leq
-\mathcal L_{\mathrm{target}}^{\mathrm{pop}}\!\left(\theta^*(w)\right).
+\mathcal L_{\mathrm{target}}^{\mathrm{pop}}\!\left(\theta'\right).
 $$
 
 That is the obstruction: **when the uncurated baseline already optimizes the target population objective, no reallocation can produce a strictly better target endpoint.** This conclusion assumes a fixed model class and converged inner optimization.
@@ -135,11 +135,11 @@ $$
 \end{aligned}
 $$
 
-The training proportions $w$ are the decision. If training and target share the same distribution within each domain and $w_0=\widehat w$, their population objectives are identical—the no-gap condition above.
+The training proportions $w$ are the decision. If training and target share the same distribution within each domain and $w=\widehat w$, their population objectives are identical—the no-gap condition above.
 
 This is the population picture behind abundant, single-pass training when training and evaluation data are sampled i.i.d. from the same underlying distribution: more data makes the empirical objectives approach the same expected loss.
 
-The seven-domain SlimPajama experiment above uses equal target weights, $\widehat w_k=1/K=1/7$. Its uniform baseline therefore has $w_{0,k}=\widehat w_k$. When training and evaluation sample the same underlying distribution within each domain, this baseline already minimizes the target objective at the population endpoint. The early gains in those learning curves are therefore consistent with acceleration. This remains true even when some domains are harder to learn than others. Giving harder domains more weight may help at finite budgets, but difficulty differences alone do not create room for a better endpoint when the baseline already matches the target.
+The seven-domain SlimPajama experiment above uses equal target weights, $\widehat w_k=1/K=1/7$. Its uniform baseline therefore has $w_k=\widehat w_k$. When training and evaluation sample the same underlying distribution within each domain, this baseline already minimizes the target objective at the population endpoint. The early gains in those learning curves are therefore consistent with acceleration. This remains true even when some domains are harder to learn than others. Giving harder domains more weight may help at finite budgets, but difficulty differences alone do not create room for a better endpoint when the baseline already matches the target.
 </div>
 
 These results are developed in our paper, **[Advancement or Acceleration? How Data Curation Improves LLM Training](https://arxiv.org/abs/2610.36983)**.
@@ -164,50 +164,60 @@ Read the figure by rows: **mixture above, selection below**. The left column sho
 
 ## A one-run diagnostic before an expensive search
 
-The population condition is clean but cannot usually be checked directly on real corpora. We therefore use the **$\Delta$-test** as an observable diagnostic from an ordinary uncurated baseline run. Let $\theta$ denote a model checkpoint from that run; the diagnostic does not require training to have converged.
+The population condition is clean but cannot usually be checked directly on real corpora. We therefore use the **$\Delta$-diagnostic** from an ordinary uncurated baseline run. Let $\theta$ denote a checkpoint from that run; training need not have converged.
 
-For a $K$-domain mixture,
+First, match each of the $J$ target components $j$ to a group $S_j$ of training domains. Every training domain belongs to exactly one group. With target weights $\widehat w_j$ and baseline training proportions $w_k$, define the signed discrepancy
+
+$$
+d_j(\theta)
+=
+\widehat w_j\mathcal L_{\mathrm{target}}^j(\theta)
+-
+\sum_{k\in S_j}w_k\mathcal L_{\mathrm{train}}^k(\theta).
+$$
+
+**The grouping depends on the task.** When training and target domains correspond one to one (*paired*, $J=K$), use $S_j=\{j\}$. For a held-out target domain with no counterpart in the candidate pool (*unpaired*), use one target component and group all training domains together: $J=1$, $S_1=\{1,\ldots,K\}$. This compares the held-out target loss with the baseline's weighted training loss.
+
+**Correct for intrinsic data difficulty.** Raw loss differences also reflect the intrinsic entropy of the data, especially when the target and training sources are unpaired. We subtract the same signed discrepancy measured by a reference model $\theta_{\mathrm{ref}}$ on the **same documents**, then take absolute values:
 
 $$
 \Delta
 =
-\sum_{k=1}^{K}
+\sum_{j=1}^{J}
+\left|d_j(\theta)-d_j(\theta_{\mathrm{ref}})\right|.
+$$
+
+The reference should capture intrinsic data difficulty and must not have been trained on the baseline's training data.
+
+Selection is the single-pool case, $K=J=1$, with full retention as the baseline:
+
+$$
+\Delta
+=
 \left|
-\widehat w_k\mathcal L_{\mathrm{target}}^k\!\left(\theta\right)
+\bigl[\mathcal L_{\mathrm{target}}(\theta)-\mathcal L_{\mathrm{train}}(\theta)\bigr]
 -
-w_{0,k}\mathcal L_{\mathrm{train}}^k\!\left(\theta\right)
+\bigl[\mathcal L_{\mathrm{target}}(\theta_{\mathrm{ref}})-\mathcal L_{\mathrm{train}}(\theta_{\mathrm{ref}})\bigr]
 \right|.
 $$
 
-Here $\widehat w_k$ is domain $k$'s importance in the target distribution, while $w_{0,k}$ is its exposure under the uncurated training mixture.
+Here, training loss is measured on examples already seen by the baseline, so the diagnostic can capture gaps caused by repeated exposure.
 
-For selection, there is a single candidate pool, so the diagnostic reduces to
+We calibrate $\Delta$ against a no-gap control within each experiment family, using held-out target data from the training distribution. An appreciably nonzero value means $\Delta>\mu_{\mathrm{null}}+3\sigma_{\mathrm{null}}$, where the null mean and standard deviation come from independently trained baselines. Its scale depends on the model, tokenizer, and data, so there is no universal raw-value threshold.
 
-$$
-\Delta
-=
-\left|
-\mathcal L_{\mathrm{target}}\!\left(\theta\right)
--
-\mathcal L_{\mathrm{train}}\!\left(\theta\right)
-\right|,
-$$
-
-where $w_0$ means full retention.
-
-In our experiments, the $\Delta$-test provides a useful early signal: appreciably nonzero values indicate opportunities for persistent gains, while gains near $\Delta=0$ tend to fade as the budget grows. A near-zero $\Delta$ suggests limited headroom, though it does not rule out every train–target gap. Note that $\Delta$ is not a sufficient condition for advancement: the available data and policy still determine whether the detected gap can be corrected.
+The diagnostic signals **potential** for advancement. A nonzero value does not guarantee that the available data and policy can correct the mismatch. Conversely, scalar losses can miss distributional differences, so a near-zero value is not proof that no gap exists.
 
 ## Controlled interventions on the gap
 
-We tested two questions in both mixture and selection experiments: do curation gains depend on the train–target gap, and can the $\Delta$-test identify promising tasks before an expensive search? We varied the train–target gap while keeping the methods and training setup largely unchanged.
+We tested two questions in both mixture and selection experiments: do curation gains depend on the train–target gap, and can the $\Delta$-diagnostic identify promising tasks before an expensive search? We varied the train–target gap while keeping the methods and training setup largely unchanged.
 
-The experiments below track gains within the training budgets we tested; the infinite-data conclusions come from the analysis above. The reported $\Delta$ values are measured halfway through the uncurated baseline’s training budget, rather than after full convergence. In practice, we can use a small proxy model for diagnosis before larger runs to reduce additional computation.
+The experiments below track gains within the training budgets we tested; the infinite-data conclusions come from the analysis above. The reported $\Delta$ values are measured halfway through the uncurated baseline’s training budget, rather than after full convergence. In practice, we can use a small proxy model for diagnosis before larger runs to reduce additional computation. In the updated mixture experiments, the exogenous gap is already clear at 5% of the budget, while the endogenous gap becomes clearly separated from the null by about 10%; the required checkpoint can depend on the task.
 
 For mixture, we compared Uniform with [Skill-It](https://arxiv.org/abs/2307.14430), [RegMix](https://arxiv.org/abs/2407.01492), [Aioli](https://arxiv.org/abs/2411.05735), [DoGE](https://arxiv.org/abs/2310.15393), and [TANDEM](https://openreview.net/pdf?id=szBFUtBzWP):
 
-- **Matched regime ($\Delta=0.07$).** This is the seven-domain SlimPajama setting from the opening experiment. Training and target weight the domains equally, and the pool is large enough to avoid repeatedly sampling depleted domains. Final averaged perplexities ranged from 19.66 to 20.17, statistically close to Uniform at 19.71. By the final checkpoint, the early leads had disappeared within experimental variation.
-- **Endogenous gap ($\Delta=0.64$).** We keep the same uniformly weighted target but restrict the pool to 300M tokens, preserving its original domain proportions. Small domains such as ArXiv and Wikipedia run out early and are repeatedly sampled. Overfitting lowers their training losses relative to held-out target losses: the gap is *endogenous* because it develops through training on limited data. Optimized mixtures improve performance by reducing exposure to these overfit domains.
-- **Exogenous gap ($\Delta=1.26$).** We hold out CommonCrawl as the target and train on the remaining six domains. The gap is *exogenous* because the target distribution differs from the candidate training pool. Related data such as C4 still offers a way to partially correct the mismatch by reweighting. Target perplexity fell from 49.19 under Uniform to roughly 40–41 under optimized mixtures.
+- **Matched regime ($\Delta=0.076$).** This is the seven-domain SlimPajama setting from the opening experiment. Training and target weight the domains equally, and the pool is large enough to avoid repeatedly sampling depleted domains. Final averaged perplexities ranged from 19.66 to 20.17, statistically close to Uniform at 19.71. By the final checkpoint, the early leads had disappeared within experimental variation.
+- **Endogenous gap ($\Delta=0.649$).** We keep the same uniformly weighted target but restrict the pool to 300M tokens, preserving its original domain proportions. Small domains such as ArXiv and Wikipedia run out early and are repeatedly sampled. Overfitting lowers their training losses relative to held-out target losses: the gap is *endogenous* because it develops through training on limited data. Optimized mixtures improve performance by reducing exposure to these overfit domains.
+- **Exogenous gap ($\Delta=0.468$).** We hold out CommonCrawl as the target and train on the remaining six domains. The gap is *exogenous* because the target distribution differs from the candidate training pool. Related data such as C4 still offers a way to partially correct the mismatch by reweighting. Target perplexity fell from 49.19 under Uniform to 40.17–41.08 under optimized mixtures.
 
 {% include figure.liquid loading="eager" path="assets/img/blog/data-curation/mixture-gap-results.png" class="img-fluid rounded z-depth-1" zoomable=true %}
 
@@ -216,15 +226,17 @@ For mixture, we compared Uniform with [Skill-It](https://arxiv.org/abs/2307.1443
 Selection provides a paired control. We kept the model, 5B-token [OpenWebMath](https://arxiv.org/abs/2310.06786) candidate pool, 60% keep ratio, and training protocol fixed. We compared Random, [EL2N](https://arxiv.org/abs/2107.07075), [InfoBatch](https://arxiv.org/abs/2303.04947), [Token-Cleaning](https://proceedings.mlr.press/v267/pang25a.html), [RHO-1](https://arxiv.org/abs/2404.07965), and [BLADE](https://arxiv.org/abs/2606.18650), alongside full-pool continual training. Using the same methods in both settings, we changed only the target used for selection and evaluation.
 
 - With an in-distribution OpenWebMath target, $\Delta=0.016$ and no selector consistently beat full-pool continual training.
-- With a shifted [MetaMath](https://arxiv.org/abs/2309.12284)–[MAmmoTH](https://arxiv.org/abs/2309.05653) target, $\Delta=0.549$. Target-aware [RHO-1](https://arxiv.org/abs/2404.07965) and [BLADE](https://arxiv.org/abs/2606.18650) could now correct a visible mismatch. BLADE raised average benchmark accuracy from 17.21 to 31.31 while retaining 60% of the candidate tokens.
+- With a shifted [MetaMath](https://arxiv.org/abs/2309.12284)–[MAmmoTH](https://arxiv.org/abs/2309.05653) target, $\Delta=0.158$. Target-aware [RHO-1](https://arxiv.org/abs/2404.07965) and [BLADE](https://arxiv.org/abs/2606.18650) could now correct a visible mismatch. RHO-1 and BLADE raised average benchmark accuracy from 17.21 to 27.06 and 31.31, respectively, while retaining 60% of the candidate tokens. Held-out target loss fell from 1.14 under full-pool continual training to 0.59 and 0.45, respectively.
 
 {% include figure.liquid loading="eager" path="assets/img/blog/data-curation/selection-gap-results.png" class="img-fluid rounded z-depth-1" zoomable=true %}
 
-*Selection yields little improvement over full-pool continual training in the approximately matched setting, but substantial gains with a correctable gap. The $\Delta$-test distinguishes these settings before selection.*
+*Selection yields little improvement over full-pool continual training in the approximately matched setting, but substantial gains with a correctable gap. The $\Delta$-diagnostic distinguishes these settings before selection.*
+
+The updated target-interpolation experiment also tests the size of the opportunity: as the MetaMath–MAmmoTH share of the target rises from 0 to 100%, $\Delta$ increases from 0.016 to 0.158, while BLADE’s average-accuracy gain over full-pool continual training rises from +0.3 to +14.1 points across the tested settings. This relation is empirical, rather than a universal conversion from $\Delta$ to expected gain.
 
 ## A different order of operations
 
-These results suggest that before asking which curation method to use, we should ask what improvement the task leaves room for. The $\Delta$-test offers a practical starting point for that diagnosis.
+These results suggest that before asking which curation method to use, we should ask what improvement the task leaves room for. The $\Delta$-diagnostic offers a practical starting point for that diagnosis.
 
 A common data curation workflow begins with the method:
 
@@ -236,7 +248,7 @@ A common data curation workflow begins with the method:
 I would instead start with the task:
 
 1. **Define the target.** What distribution and metrics represent the capability we actually care about?
-2. **Run the uncurated reference and diagnose the task.** Estimate $\Delta$ with a small proxy when possible.
+2. **Run the uncurated baseline and diagnose the task.** Estimate $\Delta$ with a small proxy when possible.
 3. **Check correctability.** Does the candidate pool contain the missing modes, and can mixture or selection expose them?
 4. **Specify the claim and optimize the data.** Are we trying to save compute, move the attainable endpoint, or both?
 5. **Validate accordingly.** For acceleration, report tokens, FLOPs, or wall-clock time at matched performance. For advancement, increase the budget and test whether the advantage persists.
